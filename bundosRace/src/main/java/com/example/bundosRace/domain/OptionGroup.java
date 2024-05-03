@@ -6,25 +6,32 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Getter
-@Table(name = "OPTION_GROUP")
+@Table(name = "option_groups")
 public class OptionGroup {
     @Id
-    @GeneratedValue
-    @Column(name = "OPTION_GROUP_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "option_group_id")
     private Long id;
 
-    @Column(name = "OPTION_NECESSARY")
+    @Column(name = "option_necessary")
     private Long necessary;
 
-    @ManyToOne
-    @Column(name = "PRODUCT_ID")
-    private Product product;
+    @Column(name = "name")
+    private String name;
+
+    @OneToMany
+    @Column(name = "option_id")
+    private List<Option> option;
 
 
 }

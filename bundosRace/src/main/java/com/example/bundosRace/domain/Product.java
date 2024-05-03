@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -15,51 +16,51 @@ import java.util.List;
 @Builder
 @Entity
 @Getter
-@Table(name = "PRODUCTS")
+@Table(name = "products")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="PRODUCT_ID")
+    @Column(name ="product_id")
     private Long id;
 
-    @Column(name ="PRODUCT_NAME")
+    @Column(name ="product_name")
     private String name;
 
-    @Column(name ="IMAGE")
-    private String image;
+    @ElementCollection //리스트를 받으려면 이렇게 받아야 함
+    @Column(name ="images")
+    private List<String> images;
 
-    @Column(name ="PRICE")
+    @Column(name ="price")
     private Integer price;
 
-    @Column(name ="DISCOUNT_RATE")
+    @Column(name ="discount_rate")
     private Integer discountRate;
 
-    @Column(name ="DELIVERY_PRICE")
+    @Column(name ="delivery_price")
     private Integer deliveryPrice;
 
-    @ElementCollection //리스트를 받으려면 이렇게 받아야 함
-    @Column(name ="OPTIONS")
-    private List<String> options;
+    @OneToMany
+    private List<Products_OptionGroups> productsOptionGroups;
 
-    @Column(name ="AMOUNT")
+    @Column(name ="amount")
     private Integer amount;
 
     @CreatedDate
-    @Column(name ="CREATED_AT")
+    @Column(name ="created_at")
     private LocalDateTime createdAt;
 
-    @Column(name ="STATUS")
-    private Integer satus;
+    @Column(name ="status")
+    private Integer status;
 
-    @Column(name ="SELL_COUNT")
+    @Column(name ="sell_count")
     private Integer sellCount;
 
     @ManyToOne
-    @Column(name = "SELLER_ID")
+    @Column(name = "seller_id")
     private Seller seller;
 
     @ManyToOne
-    @Column(name = "CATEGORY_ID")
+    @Column(name = "category_id")
     private Category category;
 
 }

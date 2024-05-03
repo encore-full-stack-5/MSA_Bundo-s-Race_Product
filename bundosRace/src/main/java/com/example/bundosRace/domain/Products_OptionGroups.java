@@ -6,27 +6,26 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Getter
-@Table(name = "sellers")
-public class Seller {
+@Table(name = "products_option_groups")
+public class Products_OptionGroups {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "seller_id")
+    @Column(name = "products_option_groups_id")
     private Long id;
 
-    @Column(name = "seller_name")
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @CreatedDate
-    @Column(name ="created_at")
-    private LocalDateTime createdAt;
+    @ManyToOne
+    @JoinColumn(name = "option_group_id")
+    private OptionGroup optionGroup;
 
 }

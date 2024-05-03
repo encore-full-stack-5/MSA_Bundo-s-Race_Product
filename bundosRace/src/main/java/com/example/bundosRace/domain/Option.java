@@ -6,30 +6,32 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
 @Getter
-@Table(name = "OPTION")
+@Table(name = "options")
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "OPTION_ID")
+    @Column(name = "option_id")
     private Long id;
 
-    @Column(name = "OPTION_NAME")
+    @Column(name = "option_name")
     private String name;
 
-    @Column(name = "OPTION_PRICE")
+    @Column(name = "option_price")
     private Integer price;
 
-    @Column(name = "OPTION_SOLDOUT")
+    @Column(name = "option_soldout")
     private Long soldOut;
 
-    @Column(name = "AMOUNT")
+    @Column(name = "amount")
     private Long amount;
-
 
 }
