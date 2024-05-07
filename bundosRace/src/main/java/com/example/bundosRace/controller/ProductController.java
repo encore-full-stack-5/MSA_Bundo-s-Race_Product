@@ -1,12 +1,10 @@
 package com.example.bundosRace.controller;
 
 import com.example.bundosRace.dto.request.CreateProductRequest;
-import com.example.bundosRace.dto.response.GetProductResponse;
 import com.example.bundosRace.dto.response.ProductDetailResponse;
 import com.example.bundosRace.service.ProductsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -7,6 +7,7 @@ import com.example.bundosRace.repository.ProductsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
+@SpringBootTest
 class ProductsServiceImplTest {
     @Autowired
     private ProductsService productsService;
@@ -26,7 +27,9 @@ class ProductsServiceImplTest {
     @Test
     void getCategories() {
         List<Category> categories = productsService.getCategories();
-        System.out.println("categories = " + categories);
+        categories.forEach((category) -> {
+            System.out.println("category = " + category.getName() + " id = " + category.getId());
+        });
         assertThat(categories).isNotNull();
         assertThat(categories.size()).isGreaterThan(0);
 
