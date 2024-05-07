@@ -25,6 +25,9 @@ public class Product {
     @Column(name ="product_name")
     private String name;
 
+    @Column(name ="description")
+    private String description;
+
     // 이거 포스트그래ID 컬럼저장방식으로 변경필요 현재는 그냥 String 으로 저장
     @Column(name ="images")
     private String images;

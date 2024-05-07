@@ -8,11 +8,13 @@ import java.util.List;
 
 public record CreateProductRequest
         (
+                @NotEmpty(message = "sellerId 파라미터가 누락 되었습니다.")
                 Long sellerId,
+                @NotEmpty(message = "categoryId 파라미터가 누락 되었습니다.")
                 Long categoryId,
                 @NotEmpty(message = "name 파라미터가 누락 되었습니다.")
                 String name,
-                List<String> images,
+                String images,
                 @NotEmpty(message = "price 파라미터가 누락 되었습니다.")
                 Integer price,
                 Integer deliveryPrice,
