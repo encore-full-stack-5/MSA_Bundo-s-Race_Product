@@ -5,6 +5,9 @@ import com.example.bundosRace.dto.request.CreateSellerRequest;
 import com.example.bundosRace.dto.request.CreateProductRequest;
 import com.example.bundosRace.dto.request.UpdateProductRequest;
 import com.example.bundosRace.dto.response.ProductDetailResponse;
+import com.example.bundosRace.dto.response.ProductListResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -28,5 +31,7 @@ public interface ProductsService {
 
     // update
     void updateProduct(Long productId, UpdateProductRequest updateProductRequest);
+
+    Page<ProductListResponse> getProductListByCategoryAndSort(String category, PageRequest pageRequest);
 
 }
