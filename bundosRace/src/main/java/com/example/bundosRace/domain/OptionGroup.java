@@ -1,14 +1,13 @@
 package com.example.bundosRace.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -24,12 +23,28 @@ public class OptionGroup {
     private Long id;
 
     @Column(name = "option_necessary")
-    private Long necessary;
+    private Boolean necessary;
 
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Option> option;
+    @JsonIgnore
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Option> options = new ArrayList<>();
+
+    public void addOption(Option option) {
+        options.add(option);
+        option.setOptionGroup(this);
+    }
+
+    public void removeOption(Option option) {
+        options.remove(option);
+        option.setOptionGroup(null);
+    }
 }

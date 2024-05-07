@@ -30,7 +30,15 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	//logging
+	implementation 'org.springframework.boot:spring-boot-starter-logging'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.1'
+
 }
 
 tasks.named('test') {

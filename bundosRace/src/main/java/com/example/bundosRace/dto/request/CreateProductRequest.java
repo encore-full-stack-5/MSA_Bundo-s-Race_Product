@@ -3,37 +3,46 @@ package com.example.bundosRace.dto.request;
 import com.example.bundosRace.domain.OptionGroup;
 import com.example.bundosRace.domain.Product;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public record CreateProductRequest
         (
-                @NotEmpty(message = "sellerId 파라미터가 누락 되었습니다.")
+                @NotNull(message = "sellerId 파라미터가 누락 되었습니다.")
                 Long sellerId,
-                @NotEmpty(message = "categoryId 파라미터가 누락 되었습니다.")
+                @NotNull(message = "categoryId 파라미터가 누락 되었습니다.")
                 Long categoryId,
                 @NotEmpty(message = "name 파라미터가 누락 되었습니다.")
                 String name,
-                String images,
-                @NotEmpty(message = "price 파라미터가 누락 되었습니다.")
+                @NotNull(message = "price 파라미터가 누락 되었습니다.")
                 Integer price,
-                Integer deliveryPrice,
-                @NotEmpty(message = "amount 파라미터가 누락 되었습니다.")
+                @NotNull(message = "amount 파라미터가 누락 되었습니다.")
                 Integer amount,
-                @NotEmpty(message = "status 파라미터가 누락 되었습니다.")
-                Integer status
+                @NotNull(message = "status 파라미터가 누락 되었습니다.")
+                Integer status,
+                @NotEmpty(message = "description 파라미터가 누락 되었습니다.")
+                String description,
+                int discountRate,
+                int deliveryPrice,
+                List<String> images,
+                List<CreateOptionGroupRequest> optionGroups
         ) {
 
     public Product toEntity() {
         return Product.builder()
                 .name(name)
-                .images(images)
                 .price(price)
-                .deliveryPrice(deliveryPrice)
+                .images(images)
                 .amount(amount)
                 .status(status)
+                .description(description)
+                .discountRate(discountRate)
+                .deliveryPrice(deliveryPrice)
+                .sellCount(0)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
-
-
 }

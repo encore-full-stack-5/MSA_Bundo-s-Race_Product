@@ -1,5 +1,6 @@
 package com.example.bundosRace.controller;
 
+import com.example.bundosRace.domain.Product;
 import com.example.bundosRace.dto.request.CreateProductRequest;
 import com.example.bundosRace.dto.response.ProductDetailResponse;
 import com.example.bundosRace.dto.response.ProductListResponse;
@@ -20,12 +21,11 @@ public class ProductController {
 
     private final ProductsService productService;
 
-    @PostMapping("/{id}")
+    @PostMapping
     public ResponseEntity<?> createProduct(
-            @PathVariable("id") Long id,
             @Valid @RequestBody CreateProductRequest request
     ) {
-        productService.createProduct(id, request);
+        productService.createProduct(request);
         return ResponseEntity.ok("success");
     }
 
@@ -45,7 +45,7 @@ public class ProductController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDetailResponse> getProductsByUserId(
+    public ResponseEntity<Product> getProductsByUserId(
             @PathVariable("id") Long productId
     ) {
         return ResponseEntity.ok(productService.getProductDetail(productId));
