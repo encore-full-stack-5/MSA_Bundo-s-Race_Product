@@ -22,6 +22,10 @@ public class Option {
     @Column(name = "option_id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "option_group_id", nullable = false)
+    private OptionGroup optionGroup;
+
     @Column(name = "option_name")
     private String name;
 

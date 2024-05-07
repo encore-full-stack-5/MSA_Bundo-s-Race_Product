@@ -29,9 +29,7 @@ public class OptionGroup {
     @Column(name = "name")
     private String name;
 
-    @OneToMany
-    @Column(name = "option_id")
+    @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> option;
-
 
 }
