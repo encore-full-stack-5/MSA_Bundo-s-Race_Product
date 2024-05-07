@@ -32,33 +32,21 @@ class ProductsServiceImplTest {
         });
         assertThat(categories).isNotNull();
         assertThat(categories.size()).isGreaterThan(0);
-
     }
 
-//    @Test
-//    @Rollback // 롤백을 명시적으로 활성화 (기본값이므로 생략 가능)
-//    public void createProduct() {
-//        // make dummy CreateProductRequest
-//        CreateProductRequest createProductRequest =
-//                new CreateProductRequest(
-//                        1L,
-//                        1L,
-//                        "Test Product",
-//                        "test.jpg",
-//                        10000,
-//                        2500,
-//                        100,
-//                        1
-//                );
-//
-//
-//        Product product = createProductRequest.toEntity();
-//        Product savedProduct = productsRepository.save(product);
-//
-//        assertThat(savedProduct).isNotNull();
-//        assertThat(savedProduct.getId()).isNotNull();
-//        assertThat(savedProduct.getName()).isEqualTo("Test Product");
-//    }
+    @Test
+    public void createProduct() {
+        productsService.createProduct(1L, new CreateProductRequest(
+                1L,
+                1L,
+                "Test Product",
+                "test.jpg",
+                10000,
+                2500,
+                100,
+                1
+        ));
+    }
 
     @Test
     void createProductOptionGroup() {
