@@ -6,9 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-
+import org.hibernate.annotations.Type;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -26,24 +25,24 @@ public class Product {
     @Column(name ="product_name")
     private String name;
 
-    @ElementCollection //리스트를 받으려면 이렇게 받아야 함
+    // 이거 포스트그래ID 컬럼저장방식으로 변경필요 현재는 그냥 String 으로 저장
     @Column(name ="images")
-    private List<String> images;
+    private String images;
 
     @Column(name ="price")
     private Integer price;
 
     @Column(name ="discount_rate")
-    private Integer discountRate;
+    private int discountRate;
 
     @Column(name ="delivery_price")
-    private Integer deliveryPrice;
+    private int deliveryPrice;
 
-    @OneToMany
+    @OneToMany(mappedBy = "product")
     private List<Products_OptionGroups> productsOptionGroups;
 
     @Column(name ="amount")
-    private Integer amount;
+    private int amount;
 
     @CreatedDate
     @Column(name ="created_at")
@@ -56,11 +55,18 @@ public class Product {
     private Integer sellCount;
 
     @ManyToOne
-    @Column(name = "seller_id")
+    @JoinColumn(name = "seller_id")
     private Seller seller;
 
-    @ManyToOne
-    @Column(name = "category_id")
+    @ManyToOne()
+    @JoinColumn(name = "category_id")
     private Category category;
 
+    void setProductsOptionGroups(List<Products_OptionGroups> productsOptionGroups) {
+        this.productsOptionGroups = productsOptionGroups;
+    }
+
+    void setCategory(Category category) {
+        this.category = category;
+    }
 }
