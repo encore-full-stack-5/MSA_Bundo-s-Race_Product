@@ -2,19 +2,23 @@ package com.example.bundosRace.controller;
 
 import com.example.bundosRace.domain.Product;
 import com.example.bundosRace.dto.request.CreateProductRequest;
+import com.example.bundosRace.dto.response.ProductDetailResponse;
+import com.example.bundosRace.dto.response.ProductListResponse;
 import com.example.bundosRace.service.ProductsService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/products")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
     private final ProductsService productService;
 
     @PostMapping
@@ -24,7 +28,6 @@ public class ProductController {
         productService.createProduct(request);
         return ResponseEntity.ok("success");
     }
-
 
     @GetMapping("/categories")
     public ResponseEntity<?> getProductCategories() {
@@ -39,11 +42,26 @@ public class ProductController {
 //    }
 
     // 사용자가 등록한 상품 조회
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductsByUserId(
             @PathVariable("id") Long productId
     ) {
         return ResponseEntity.ok(productService.getProductDetail(productId));
+    }
+
+    @GetMapping()
+    public ResponseEntity<Page<ProductListResponse>>getProductList(
+            @RequestParam(required = false)String category, //필터 넣을 카테고리
+            @RequestParam(defaultValue = "0")int page, //각 페이지 시작은 0부터
+            @RequestParam(defaultValue = "10")int size, //각 페이지 별 상품 갯수는 10개
+            @RequestParam(defaultValue = "name")String sortBy, // 정렬 방식
+            @RequestParam(defaultValue = "DESC")Sort.Direction direction){
+
+        PageRequest pageRequest = PageRequest.of(page,size, Sort.by(direction,sortBy));
+
+        return ResponseEntity.ok(productService.getProductListByCategoryAndSort(category,pageRequest));
     }
 
 
