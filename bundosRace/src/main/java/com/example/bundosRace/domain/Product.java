@@ -1,12 +1,8 @@
 package com.example.bundosRace.domain;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.hibernate.annotations.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +38,7 @@ public class Product {
     @Column(name ="delivery_price")
     private int deliveryPrice;
 
+    @Setter
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OptionGroup> optionGroups = new ArrayList<>();
 
@@ -58,10 +55,12 @@ public class Product {
     @Column(name ="sell_count")
     private Integer sellCount;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "seller_id")
     private Seller seller;
 
+    @Setter
     @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;

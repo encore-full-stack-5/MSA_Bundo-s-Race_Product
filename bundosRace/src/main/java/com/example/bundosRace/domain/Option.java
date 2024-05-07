@@ -2,10 +2,7 @@ package com.example.bundosRace.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -23,6 +20,7 @@ public class Option {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @Setter
     @JoinColumn(name = "option_group_id")
     private OptionGroup optionGroup;
 
@@ -37,5 +35,6 @@ public class Option {
 
     @Column(name = "amount")
     private Long amount;
+
 
 }

@@ -2,10 +2,7 @@ package com.example.bundosRace.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -30,6 +27,7 @@ public class OptionGroup {
     @Column(name = "name")
     private String name;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -37,4 +35,13 @@ public class OptionGroup {
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Option> options = new ArrayList<>();
 
+    public void addOption(Option option) {
+        options.add(option);
+        option.setOptionGroup(this);
+    }
+
+    public void removeOption(Option option) {
+        options.remove(option);
+        option.setOptionGroup(null);
+    }
 }

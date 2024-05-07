@@ -7,6 +7,7 @@ import com.example.bundosRace.dto.request.UpdateProductRequest;
 import com.example.bundosRace.dto.response.ProductDetailResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductsService {
 
