@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.hibernate.annotations.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -41,8 +42,8 @@ public class Product {
     @Column(name ="delivery_price")
     private int deliveryPrice;
 
-    @OneToMany(mappedBy = "product")
-    private List<Products_OptionGroups> productsOptionGroups;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OptionGroup> optionGroups = new ArrayList<>();
 
     @Column(name ="amount")
     private int amount;
@@ -65,11 +66,4 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    void setProductsOptionGroups(List<Products_OptionGroups> productsOptionGroups) {
-        this.productsOptionGroups = productsOptionGroups;
-    }
-
-    void setCategory(Category category) {
-        this.category = category;
-    }
 }

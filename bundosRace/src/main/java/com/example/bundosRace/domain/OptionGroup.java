@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -29,7 +30,11 @@ public class OptionGroup {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
     @OneToMany(mappedBy = "optionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Option> option;
+    private List<Option> options = new ArrayList<>();
 
 }
