@@ -1,4 +1,4 @@
-package com.example.bundosRace.core;
+package com.example.bundosRace.core.error;
 
 import org.springframework.http.HttpStatus;
 

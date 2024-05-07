@@ -1,4 +1,4 @@
-package com.example.bundosRace.core;
+package com.example.bundosRace.core.error;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;

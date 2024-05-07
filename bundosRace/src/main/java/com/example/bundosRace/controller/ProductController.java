@@ -1,7 +1,7 @@
 package com.example.bundosRace.controller;
 
+import com.example.bundosRace.domain.Product;
 import com.example.bundosRace.dto.request.CreateProductRequest;
-import com.example.bundosRace.dto.response.ProductDetailResponse;
 import com.example.bundosRace.service.ProductsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -17,12 +17,11 @@ public class ProductController {
     @Autowired
     private final ProductsService productService;
 
-    @PostMapping("/{id}")
+    @PostMapping
     public ResponseEntity<?> createProduct(
-            @PathVariable("id") Long id,
             @Valid @RequestBody CreateProductRequest request
     ) {
-        productService.createProduct(id, request);
+        productService.createProduct(request);
         return ResponseEntity.ok("success");
     }
 
@@ -41,7 +40,7 @@ public class ProductController {
 
     // 사용자가 등록한 상품 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDetailResponse> getProductsByUserId(
+    public ResponseEntity<Product> getProductsByUserId(
             @PathVariable("id") Long productId
     ) {
         return ResponseEntity.ok(productService.getProductDetail(productId));

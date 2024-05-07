@@ -1,6 +1,7 @@
 package com.example.bundosRace.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,6 +20,7 @@ public class Option {
     @Column(name = "option_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @Setter
     @JoinColumn(name = "option_group_id")
@@ -30,8 +32,9 @@ public class Option {
     @Column(name = "option_price")
     private Integer price;
 
+    @Builder.Default
     @Column(name = "option_soldout")
-    private Long soldOut;
+    private Boolean soldOut = false;
 
     @Column(name = "amount")
     private Long amount;

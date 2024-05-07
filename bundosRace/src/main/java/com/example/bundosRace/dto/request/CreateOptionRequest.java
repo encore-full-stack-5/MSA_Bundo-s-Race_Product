@@ -3,7 +3,6 @@ package com.example.bundosRace.dto.request;
 import com.example.bundosRace.domain.Option;
 
 public record CreateOptionRequest(
-        Long optionGroupId,
         String name,
         int price,
         Long amount

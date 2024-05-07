@@ -6,8 +6,7 @@ import com.example.bundosRace.domain.OptionGroup;
 import java.util.List;
 
 public record CreateOptionGroupRequest(
-        Long productId,
-        Long necessary,
+        Boolean necessary,
         String name,
         List<CreateOptionRequest> options
 ) {
