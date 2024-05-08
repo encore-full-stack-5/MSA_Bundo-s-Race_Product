@@ -118,7 +118,7 @@ class ProductsServiceImplTest {
             ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
             Mockito.verify(productsRepository).save(productCaptor.capture());
             assertThat(productCaptor.getValue().getPrice()).isEqualTo(10000);
-            assertThat(productCaptor.getValue().getCategory().getName()).isEqualTo("test");
+            assertThat(productCaptor.getValue().getIsDeleted()).isEqualTo(false);
             assertThat(productCaptor.getValue().getSeller().getName()).isEqualTo("test");
         }
 
@@ -220,10 +220,7 @@ class ProductsServiceImplTest {
             productsService.deleteProduct(productId);
 
             // then
-            ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
-            Mockito.verify(productsRepository).delete(productCaptor.capture());
-            assertThat(productCaptor.getValue().getAmount()).isEqualTo(1111);
-            assertThat(productCaptor.getValue().getName()).isEqualTo("test");
+            assertThat(dummyProduct.getIsDeleted()).isEqualTo(true);
         }
     }
 

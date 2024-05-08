@@ -80,8 +80,9 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     @Transactional
     public void deleteProduct(Long productId) {
-        productsRepository.delete(productsRepository.findById(productId)
-                .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다.")));
+        Product product = productsRepository.findById(productId)
+                .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+        product.delete();
     }
 
     @Override

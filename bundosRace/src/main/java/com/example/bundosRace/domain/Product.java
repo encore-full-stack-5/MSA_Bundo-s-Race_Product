@@ -6,6 +6,7 @@ import com.example.bundosRace.core.util.JsonStringListConverter;
 import com.example.bundosRace.dto.request.UpdateProductRequest;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,11 @@ public class Product {
 
     @Column(name ="delivery_price")
     private int deliveryPrice;
+
+    @Column(name ="is_deleted")
+    @ColumnDefault("false")
+    @Builder.Default
+    private Boolean isDeleted = false;
 
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -107,5 +113,9 @@ public class Product {
                 .findFirst()
                 .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 "+ optionId +" 옵션이 포함된 옵션그룹이 존재하지 않습니다."));
         optionGroup.sellOption(optionId, count);
+    }
+
+    public void delete() {
+        this.isDeleted = true;
     }
 }
