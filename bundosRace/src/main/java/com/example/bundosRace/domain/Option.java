@@ -1,6 +1,7 @@
 package com.example.bundosRace.domain;
 
 
+import com.example.bundosRace.core.error.ExpectedError;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,12 +33,13 @@ public class Option {
     @Column(name = "option_price")
     private Integer price;
 
-    @Builder.Default
-    @Column(name = "option_soldout")
-    private Boolean soldOut = false;
-
     @Column(name = "amount")
     private Long amount;
 
-
+    public void sell(int amount) {
+        if (this.amount < amount) {
+            throw new ExpectedError.ResourceNotFoundException("옵션 "+ name +" 재고가 부족합니다.");
+        }
+        this.amount -= amount;
+    }
 }

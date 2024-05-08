@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ProductListResponse {
     private Long productId;
-    private String image;
+    private List<String> images;
     private int price;
     private int discountRate;
     private String productName;
@@ -24,7 +25,7 @@ public class ProductListResponse {
     public ProductListResponse fromEntity(Product product){
         return ProductListResponse.builder()
                 .productId(product.getId())
-                .image(product.getImages())
+                .images(product.getImages())
                 .price(product.getPrice())
                 .discountRate(product.getDiscountRate())
                 .productName(product.getName())
