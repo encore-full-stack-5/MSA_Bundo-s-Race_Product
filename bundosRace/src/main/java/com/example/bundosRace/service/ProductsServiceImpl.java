@@ -1,5 +1,6 @@
 package com.example.bundosRace.service;
 
+import com.example.bundosRace.core.error.ExpectedError;
 import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
@@ -80,8 +81,9 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     @Transactional
     public void deleteProduct(Long productId) {
-        productsRepository.delete(productsRepository.findById(productId)
-                .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다.")));
+        Product product = productsRepository.findById(productId)
+                .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+        product.delete();
     }
 
     @Override
@@ -97,11 +99,10 @@ public class ProductsServiceImpl implements ProductsService {
     public void sellProducts(SellProductsRequest sellProductsRequest) {
         sellProductsRequest.sellProducts().forEach((saleProduct) -> {
             Product product = productsRepository.findById(saleProduct.productId())
-                    .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 "+ saleProduct.productId() +" 상품이 존재하지 않습니다."));
+                    .orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 "+ saleProduct.productId() +" 상품이 존재하지 않습니다."));
             product.sell(saleProduct.count(), saleProduct.optionIds());
         });
     }
-
 
     @Override
     public Page<ProductListResponse> getProductListByCategoryAndSort(String category, PageRequest pageRequest) {
