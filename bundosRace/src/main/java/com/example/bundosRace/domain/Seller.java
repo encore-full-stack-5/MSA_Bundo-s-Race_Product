@@ -25,6 +25,9 @@ public class Seller {
     @Column(name = "seller_name")
     private String name;
 
+    @Column(name = "uid")
+    private String uid;
+
     @CreatedDate
     @Column(name ="created_at")
     private LocalDateTime createdAt;

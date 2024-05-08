@@ -47,4 +47,13 @@ public class OptionGroup {
         options.remove(option);
         option.setOptionGroup(null);
     }
+
+    public void sellOption(Long optionId, int amount) {
+        Option option = options.stream()
+                .filter(o -> o.getId().equals(optionId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
+        option.sell(amount);
+
+    }
 }

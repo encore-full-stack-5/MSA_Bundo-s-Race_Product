@@ -1,9 +1,14 @@
 package com.example.bundosRace.domain;
 
+import com.example.bundosRace.core.error.ExpectedError;
+import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.core.util.JsonStringListConverter;
+import com.example.bundosRace.dto.request.UpdateProductRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +25,9 @@ public class Product {
     @Column(name ="product_id")
     private Long id;
 
-    @Setter
     @Column(name ="product_name")
     private String name;
 
-    @Setter
     @Column(name ="description")
     private String description;
 
@@ -32,15 +35,12 @@ public class Product {
     @Convert(converter = JsonStringListConverter.class)
     private List<String> images;
 
-    @Setter
     @Column(name ="price")
     private Integer price;
 
-    @Setter
     @Column(name ="discount_rate")
     private int discountRate;
 
-    @Setter
     @Column(name ="delivery_price")
     private int deliveryPrice;
 
@@ -73,12 +73,39 @@ public class Product {
 
     public void addOptionGroup(OptionGroup optionGroup) {
         this.optionGroups.add(optionGroup);
-        optionGroup.setProduct(this);  // 옵션 그룹에 상품 참조 설정
+        optionGroup.setProduct(this);
     }
 
     public void removeOptionGroup(OptionGroup optionGroup) {
         this.optionGroups.remove(optionGroup);
-        optionGroup.setProduct(null);  // 옵션 그룹의 상품 참조 해제
+        optionGroup.setProduct(null);
     }
 
+    public void updateEntity(UpdateProductRequest request) {
+        if(request.name() != null) name = request.name();
+        if(request.description() != null) description = request.description();
+        if(request.price() != null) price = request.price();
+        if(request.discountRate() != null) discountRate = request.discountRate();
+        if(request.deliveryPrice() != null) deliveryPrice = request.deliveryPrice();
+        if(request.status() != null) status = request.status();
+    }
+
+    public void sell(int count, List<Long> optionIds) {
+        if (this.amount < count) {
+            throw new ExpectedError.ResourceNotFoundException(("재고가 부족합니다."));
+        }
+        this.amount -= count;
+        this.sellCount += count;
+        if(optionIds != null)  {
+            optionIds.forEach(optionId -> sellOption(optionId, count));
+        }
+    }
+
+    public void sellOption(Long optionId, int count) {
+        OptionGroup optionGroup = optionGroups.stream()
+                .filter(og -> og.getOptions().stream().anyMatch(o -> o.getId().equals(optionId)))
+                .findFirst()
+                .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 "+ optionId +" 옵션이 포함된 옵션그룹이 존재하지 않습니다."));
+        optionGroup.sellOption(optionId, count);
+    }
 }

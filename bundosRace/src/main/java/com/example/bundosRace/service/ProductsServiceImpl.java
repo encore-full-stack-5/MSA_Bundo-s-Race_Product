@@ -3,12 +3,15 @@ package com.example.bundosRace.service;
 import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
+import com.example.bundosRace.dto.response.ProductListResponse;
 import com.example.bundosRace.repository.CategoryRepository;
 import com.example.bundosRace.repository.OptionGroupRepository;
 import com.example.bundosRace.repository.ProductsRepository;
 import com.example.bundosRace.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +30,7 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     @Transactional
     public Product getProductDetail(Long productId) {
-        Product product = productsRepository.findById(productId).orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다."));
-        return product;
+        return productsRepository.findById(productId).orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다."));
     }
 
     @Override
@@ -49,6 +51,7 @@ public class ProductsServiceImpl implements ProductsService {
         productsRepository.save(product);
     }
 
+
     @Override
     @Transactional
     public void createProductOptionGroup(Long productId, CreateOptionGroupRequest createOptionGroupRequest) {
@@ -61,7 +64,7 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     @Transactional
-    public void createProductOption(Long optionGroupId, CreateOptionRequest CreateOptionRequest) {
+    public void createProductOption(Long productId, Long optionGroupId, CreateOptionRequest CreateOptionRequest) {
         OptionGroup optionGroup = optionGroupRepository.findById(optionGroupId)
                 .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 옵션 그룹이 존재하지 않습니다."));
         optionGroup.addOption(CreateOptionRequest.toEntity());
@@ -86,7 +89,23 @@ public class ProductsServiceImpl implements ProductsService {
     public void updateProduct(Long productId, UpdateProductRequest updateProductRequest) {
         Product product = productsRepository.findById(productId)
                 .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다."));
-        updateProductRequest.updateEntity(product);
+        product.updateEntity(updateProductRequest);
+    }
+
+    @Override
+    @Transactional
+    public void sellProducts(SellProductsRequest sellProductsRequest) {
+        sellProductsRequest.sellProducts().forEach((saleProduct) -> {
+            Product product = productsRepository.findById(saleProduct.productId())
+                    .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 "+ saleProduct.productId() +" 상품이 존재하지 않습니다."));
+            product.sell(saleProduct.count(), saleProduct.optionIds());
+        });
+    }
+
+
+    @Override
+    public Page<ProductListResponse> getProductListByCategoryAndSort(String category, PageRequest pageRequest) {
+        return null;
     }
 
     private void addOptionGroupsInProduct(CreateProductRequest request, Product product) {

@@ -1,5 +1,6 @@
 package com.example.bundosRace.service;
 
+import com.example.bundosRace.core.error.ExpectedError;
 import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
@@ -49,15 +50,17 @@ class ProductsServiceImplTest {
 
 
     private final Category category = new Category(1L, "test");
-    private final Seller seller = new Seller(1L, "test", LocalDateTime.now());
+    private final Seller seller = new Seller(1L, "test", "test", LocalDateTime.now());
     private final Option dummyOption = Option.builder().id(1L).name("test").build();
-    private final List<Option> dummyOptions = List.of(Option.builder().id(1L).name("test1").build(), Option.builder().id(2L).name("test2").build());
-    private final OptionGroup dummyOptionGroup = OptionGroup.builder().id(1L).name("test").options(new ArrayList<>(dummyOptions)).build();
+    private final List<Option> dummyOptions = List.of(Option.builder().id(1L).name("test1").amount(1000L).build(), Option.builder().id(2L).name("test2").amount(1000L).build());
+    private final OptionGroup dummyOptionGroup = OptionGroup.builder()
+            .id(1L).name("test").options(new ArrayList<>(dummyOptions)).build();
     private final Product dummyProduct = Product.builder()
             .id(1L)
             .name("test")
             .amount(1111)
             .discountRate(50)
+            .sellCount(0)
             .optionGroups(new ArrayList<>(List.of(dummyOptionGroup)))
             .build();
 
@@ -95,7 +98,7 @@ class ProductsServiceImplTest {
         Mockito.when(productsRepository.save(Mockito.any(Product.class))).thenReturn(dummyProduct);
         Mockito.when(optionRepository.findById(anyLong())).thenReturn(Optional.of(dummyOption));
         Mockito.when(optionGroupRepository.findById(anyLong())).thenReturn(Optional.of(dummyOptionGroup));
-        Mockito.when(productsRepository.findById(anyLong())).thenReturn(Optional.of(dummyProduct));
+        Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.of(dummyProduct));
     }
 
     @Nested
@@ -174,11 +177,12 @@ class ProductsServiceImplTest {
     @DisplayName("createProductOption 테스트")
     void createProductOption() {
         // given
+        Long productId = 1L;
         Long productOptionGroupId = 1L;
         CreateOptionRequest request = new CreateOptionRequest("New Option", 300, 30L);
 
         // when
-        productsService.createProductOption(productOptionGroupId, request);
+        productsService.createProductOption(productId, productOptionGroupId, request);
 
         // then
         assertThat(dummyOptionGroup.getOptions().get(0).getName()).isEqualTo("test1");
@@ -227,7 +231,7 @@ class ProductsServiceImplTest {
     @DisplayName("createSeller 테스트")
     void createSeller() {
         // given
-        CreateSellerRequest request = new CreateSellerRequest("test");
+        CreateSellerRequest request = new CreateSellerRequest("test", "test");
 
         // when
         productsService.createSeller(request);
@@ -236,6 +240,131 @@ class ProductsServiceImplTest {
         ArgumentCaptor<Seller> sellerCaptor = ArgumentCaptor.forClass(Seller.class);
         Mockito.verify(sellerRepository).save(sellerCaptor.capture());
         assertThat(sellerCaptor.getValue().getName()).isEqualTo("test");
+    }
+
+    @Nested
+    @DisplayName("sellProducts 테스트")
+    class SellProductsTest {
+
+        @Test
+        @DisplayName("옵셥을 포함한 상품이 정상적으로 판매된다")
+        void 옵셥을_포함한_상품이_정상적으로_판매된다() {
+            // given
+            SellProductsRequest request = new SellProductsRequest(1, List.of(
+                    new sellProduct(1L, 1, List.of(1L, 2L)),
+                    new sellProduct(2L, 1, List.of(3L))
+            ));
+            Long productId1 = 1L;
+            Long productId2 = 2L;
+            OptionGroup dummyOptionGroup1 = OptionGroup.builder().id(1L).name("test1").options(new ArrayList<>(List.of(Option.builder().id(1L).name("test1").amount(100L).build(), Option.builder().id(2L).name("test2").amount(100L).build()))).build();
+            OptionGroup dummyOptionGroup2 = OptionGroup.builder().id(2L).name("test2").options(new ArrayList<>(List.of(Option.builder().id(3L).name("test3").amount(100L).build()))).build();
+            Product dummyProduct1 = Product.builder().id(productId1).name("test").amount(1111).optionGroups(new ArrayList<>(List.of(dummyOptionGroup1))).build();
+            Product dummyProduct2 = Product.builder().id(productId2).name("test").amount(1111).optionGroups(new ArrayList<>(List.of(dummyOptionGroup2))).build();
+            Mockito.when(productsRepository.findById(productId1)).thenReturn(Optional.of(dummyProduct1));
+            Mockito.when(productsRepository.findById(productId2)).thenReturn(Optional.of(dummyProduct2));
+
+            // when
+            productsService.sellProducts(request);
+
+            // then
+            assertThat(dummyProduct1.getAmount()).isEqualTo(1110);
+            assertThat(dummyProduct1.getSellCount()).isEqualTo(1);
+            assertThat(dummyProduct1.getOptionGroups().get(0).getOptions().get(0).getAmount()).isEqualTo(99L);
+            assertThat(dummyProduct1.getOptionGroups().get(0).getOptions().get(1).getAmount()).isEqualTo(99L);
+            assertThat(dummyProduct2.getOptionGroups().get(0).getOptions().get(0).getAmount()).isEqualTo(99L);
+        }
+
+        @Test
+        @DisplayName("옵셥이 없는 상품이 정상적으로 판매된다")
+        void 옵셥이_없는_상품이_정상적으로_판매된다() {
+            // given
+            SellProductsRequest request = new SellProductsRequest(1, List.of(
+                    new sellProduct(1L, 1, null)
+            ));
+            // when
+            productsService.sellProducts(request);
+
+            // then
+            assertThat(dummyProduct.getAmount()).isEqualTo(1110);
+            assertThat(dummyProduct.getSellCount()).isEqualTo(1);
+            assertThat(dummyProduct.getOptionGroups().get(0).getOptions().get(0).getAmount()).isEqualTo(1000L);
+        }
+
+        @Test
+        @DisplayName("상품이 존재하지 않으면 에러를 반환한다")
+        void 상품이_존재하지_않으면_에러를_반환한다() {
+            // given
+            Long productId = 100L;
+            SellProductsRequest request = new SellProductsRequest(1, List.of(
+                    new sellProduct(productId, 1, List.of(1L, 2L))
+            ));
+
+            Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.empty());
+
+            // when
+            Exception exception = assertThrows(UnexpectedError.IllegalArgumentException.class, () -> {
+                productsService.sellProducts(request);
+            });
+
+            // then
+            assertThat(exception.getMessage()).contains("해당 "+ productId +" 상품이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("옵션이 존재하지 않으면 에러를 반환한다")
+        void 옵션이_존재하지_않으면_에러를_반환한다() {
+            // given
+            Long productId = 1L;
+            Long optionId = 6L;
+            SellProductsRequest request = new SellProductsRequest(1, List.of(
+                    new sellProduct(productId, 1, List.of(optionId))
+            ));
+
+            // when
+            Exception exception = assertThrows(UnexpectedError.IllegalArgumentException.class, () -> {
+                productsService.sellProducts(request);
+            });
+
+            // then
+            assertThat(exception.getMessage()).contains("해당 "+ optionId +" 옵션이 포함된 옵션그룹이 존재하지 않습니다.");
+        }
+
+
+        @Test
+        @DisplayName("물품수량이 부족하면 에러를 반환한다.")
+        void 물품수량이_부족하면_에러를_반환한다() {
+            // given
+            // given
+            Long productId = 1L;
+            SellProductsRequest request = new SellProductsRequest(1, List.of(
+                    new sellProduct(productId, 10000, null)
+            ));
+
+            // when
+            Exception exception = assertThrows(ExpectedError.ResourceNotFoundException.class, () -> {
+                productsService.sellProducts(request);
+            });
+
+            // then
+            assertThat(exception.getMessage()).contains("재고가 부족합니다.");
+        }
+        @Test
+        @DisplayName("옵션수량이 부족하면 에러를 반환한다.")
+        void 옵션수량이_부족하면_에러를_반환한다() {
+            // given
+            Long productId = 1L;
+            SellProductsRequest request = new SellProductsRequest(1, List.of(
+                    new sellProduct(productId, 1050, List.of(1L, 2L))
+            ));
+
+            // when
+            Exception exception = assertThrows(ExpectedError.ResourceNotFoundException.class, () -> {
+                productsService.sellProducts(request);
+            });
+
+            // then
+            assertThat(exception.getMessage()).contains("옵션 "+ dummyOptions.get(0).getName() +" 재고가 부족합니다.");
+        }
     }
 
     @Nested

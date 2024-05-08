@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class ErrorHandler {
     @ExceptionHandler(ExpectedError.class)
     private ResponseEntity<?> handleExpectedError(
-            UnexpectedError ex
+            ExpectedError ex
     ) {
         return ResponseEntity.status(ex.httpStatus).body(ex.getMessage());
     }
