@@ -90,15 +90,15 @@ public class ProductController {
             @RequestParam(defaultValue = "DESC")Sort.Direction direction//오름차순 내림차순
             ){
 
-//        Sort sort = switch (sortBy) {
-//            case "reviewCount" -> Sort.by(direction, "reviewCount"); // 리뷰 순
-//            case "price" -> Sort.by(direction, "price"); // 가격 순
-//            case "createdAt" -> Sort.by(direction, "createdAt"); // 등록일 순
-//            default -> Sort.by(direction, sortBy); // 기본값 또는 예상치 못한 값에 대한 처리
-//        };
+        Sort sort = switch (sortBy) {
+            case "reviewCount" -> Sort.by(direction, "reviewCount"); // 리뷰 순
+            case "price" -> Sort.by(direction, "price"); // 가격 순
+            case "createdAt" -> Sort.by(direction, "createdAt"); // 등록일 순
+            default -> Sort.by(direction, sortBy); // 기본값 또는 예상치 못한 값에 대한 처리
+        };
 
-//        Pageable pageable = PageRequest.of(page -1 ,size, sort);
-        Pageable pageable = PageRequest.of(page -1 ,size);
+       Pageable pageable = PageRequest.of(page -1 ,size, sort);
+//        Pageable pageable = PageRequest.of(page -1 ,size);
 
 
         return ResponseEntity.ok(productService.getProductListByCategoryAndSort(categoryId , startPrice , endPrice , sellerId , pageable));
