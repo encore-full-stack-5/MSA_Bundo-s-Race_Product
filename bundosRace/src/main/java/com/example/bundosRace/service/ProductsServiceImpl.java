@@ -5,15 +5,12 @@ import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
 import com.example.bundosRace.dto.response.ProductListResponse;
-import com.example.bundosRace.repository.CategoryRepository;
-import com.example.bundosRace.repository.OptionGroupRepository;
-import com.example.bundosRace.repository.ProductsRepository;
-import com.example.bundosRace.repository.SellerRepository;
+import com.example.bundosRace.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +25,7 @@ public class ProductsServiceImpl implements ProductsService {
     private final CategoryRepository categoryRepository;
     private final SellerRepository sellerRepository;
     private final OptionGroupRepository optionGroupRepository;
+    private final ProductListCustom productListCustom;
 
     @Override
     @Transactional
@@ -100,14 +98,9 @@ public class ProductsServiceImpl implements ProductsService {
     public void sellProducts(SellProductsRequest sellProductsRequest) {
         sellProductsRequest.sellProducts().forEach((saleProduct) -> {
             Product product = productsRepository.findById(saleProduct.productId())
-                    .orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 " + saleProduct.productId() + " 상품이 존재하지 않습니다."));
+                    .orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 "+ saleProduct.productId() +" 상품이 존재하지 않습니다."));
             product.sell(saleProduct.count(), saleProduct.optionIds());
         });
-    }
-
-    @Override
-    public Page<ProductListResponse> getProductListByCategoryAndSort(String category, PageRequest pageRequest) {
-        return null;
     }
 
     private void addOptionGroupsInProduct(CreateProductRequest request, Product product) {
@@ -125,5 +118,16 @@ public class ProductsServiceImpl implements ProductsService {
             optionGroup.addOption(option);
         });
 
+    }
+
+    @Override
+    public Page<ProductListResponse> getProductListByCategoryAndSort(Long categoryId, Integer startPrice, Integer endPrice ,Long sellerId, Pageable pageable) {
+        //start랑 end가 start가 null인 경우 from값은 Integer
+        int maxValue = 0;
+        if(endPrice == 0) maxValue = Integer.MAX_VALUE;
+        else maxValue = endPrice;
+      
+        Page<Product> productListPage = productListCustom.filterProductList(categoryId,startPrice,maxValue,sellerId,pageable);
+        return productListPage.map(ProductListResponse :: fromEntity);
     }
 }

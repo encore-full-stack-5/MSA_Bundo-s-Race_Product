@@ -8,7 +8,7 @@ import com.example.bundosRace.dto.request.CreateProductRequest;
 import com.example.bundosRace.dto.request.UpdateProductRequest;
 import com.example.bundosRace.dto.response.ProductListResponse;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -31,6 +31,7 @@ public interface ProductsService {
     void updateProduct(Long productId, UpdateProductRequest updateProductRequest);
     void sellProducts(SellProductsRequest sellProductsRequest);
 
-    Page<ProductListResponse> getProductListByCategoryAndSort(String category, PageRequest pageRequest);
+    Page<ProductListResponse> getProductListByCategoryAndSort(
+            Long category, Integer startPrice,Integer endPrice,Long sellerId,Pageable pageable);
 
 }

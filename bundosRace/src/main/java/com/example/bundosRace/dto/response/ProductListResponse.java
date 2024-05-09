@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 public class ProductListResponse {
     private Long productId;
-    private List<String> images;
+    private String image;
     private int price;
     private int discountRate;
     private String productName;
@@ -22,10 +22,10 @@ public class ProductListResponse {
     private String sellerName;
     private LocalDateTime createdAt;
 
-    public ProductListResponse fromEntity(Product product){
+    public static ProductListResponse fromEntity(Product product){
         return ProductListResponse.builder()
                 .productId(product.getId())
-                .images(product.getImages())
+                .image(product.getImages().get(0))//0번째가 대표이미지
                 .price(product.getPrice())
                 .discountRate(product.getDiscountRate())
                 .productName(product.getName())
