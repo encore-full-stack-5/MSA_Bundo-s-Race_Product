@@ -37,8 +37,8 @@ public class ProductListQueryRepository implements ProductListCustom{
             booleanBuilder.and(product.category.id.eq(categoryId));
         if(sellerId != null)
             booleanBuilder.and(product.seller.id.eq(sellerId));
-
         booleanBuilder.and(product.isDeleted.eq(false));
+        booleanBuilder.and(product.status.eq(1));
 
         JPAQuery<Product>query = jpaQueryFactory
                 .selectFrom(product)
