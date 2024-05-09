@@ -61,6 +61,7 @@ class ProductsServiceImplTest {
             .amount(1111)
             .discountRate(50)
             .sellCount(0)
+            .category(category)
             .optionGroups(new ArrayList<>(List.of(dummyOptionGroup)))
             .build();
 
@@ -92,13 +93,11 @@ class ProductsServiceImplTest {
 
     @BeforeEach
     void setup() {
-        // 각 테스트 실행 전 공통 설정, Mock 객체 리턴값 설정
+        // 각 테스트 실행 전 공통 설정, Mock repository 리턴값 설정
         Mockito.when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
-        Mockito.when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(seller));
-        Mockito.when(productsRepository.save(Mockito.any(Product.class))).thenReturn(dummyProduct);
         Mockito.when(optionRepository.findById(anyLong())).thenReturn(Optional.of(dummyOption));
         Mockito.when(optionGroupRepository.findById(anyLong())).thenReturn(Optional.of(dummyOptionGroup));
-        Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.of(dummyProduct));
+        Mockito.when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(seller));
     }
 
     @Nested
@@ -110,6 +109,7 @@ class ProductsServiceImplTest {
         void 정상적으로_상품을_생성한다() {
             // given
             CreateProductRequest request = makeDummyRequest();
+//            Mockito.when(productsRepository.save(Mockito.any(Product.class))).thenReturn(dummyProduct);
 
             // when
             productsService.createProduct(request);
@@ -164,6 +164,7 @@ class ProductsServiceImplTest {
                 new CreateOptionRequest("Option 1", 100, 10L),
                 new CreateOptionRequest("Option 2", 200, 20L)
         ));
+        Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.of(dummyProduct));
 
         // when
         productsService.createProductOptionGroup(productId, request);
@@ -180,6 +181,7 @@ class ProductsServiceImplTest {
         Long productId = 1L;
         Long productOptionGroupId = 1L;
         CreateOptionRequest request = new CreateOptionRequest("New Option", 300, 30L);
+        Mockito.when(optionGroupRepository.findById(anyLong())).thenReturn(Optional.of(dummyOptionGroup));
 
         // when
         productsService.createProductOption(productId, productOptionGroupId, request);
@@ -215,6 +217,7 @@ class ProductsServiceImplTest {
         void 상품이_존재하면_삭제한다() {
             // given
             Long productId = 1L;
+            Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.of(dummyProduct));
 
             // when
             productsService.deleteProduct(productId);
@@ -275,9 +278,12 @@ class ProductsServiceImplTest {
         @DisplayName("옵셥이 없는 상품이 정상적으로 판매된다")
         void 옵셥이_없는_상품이_정상적으로_판매된다() {
             // given
+            Long productId = 1L;
             SellProductsRequest request = new SellProductsRequest(1, List.of(
-                    new sellProduct(1L, 1, null)
+                    new sellProduct(productId, 1, null)
             ));
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
+
             // when
             productsService.sellProducts(request);
 
@@ -295,11 +301,10 @@ class ProductsServiceImplTest {
             SellProductsRequest request = new SellProductsRequest(1, List.of(
                     new sellProduct(productId, 1, List.of(1L, 2L))
             ));
-
-            Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.empty());
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.empty());
 
             // when
-            Exception exception = assertThrows(UnexpectedError.IllegalArgumentException.class, () -> {
+            Exception exception = assertThrows(ExpectedError.ResourceNotFoundException.class, () -> {
                 productsService.sellProducts(request);
             });
 
@@ -316,6 +321,7 @@ class ProductsServiceImplTest {
             SellProductsRequest request = new SellProductsRequest(1, List.of(
                     new sellProduct(productId, 1, List.of(optionId))
             ));
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
 
             // when
             Exception exception = assertThrows(UnexpectedError.IllegalArgumentException.class, () -> {
@@ -336,6 +342,7 @@ class ProductsServiceImplTest {
             SellProductsRequest request = new SellProductsRequest(1, List.of(
                     new sellProduct(productId, 10000, null)
             ));
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
 
             // when
             Exception exception = assertThrows(ExpectedError.ResourceNotFoundException.class, () -> {
@@ -353,6 +360,7 @@ class ProductsServiceImplTest {
             SellProductsRequest request = new SellProductsRequest(1, List.of(
                     new sellProduct(productId, 1050, List.of(1L, 2L))
             ));
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
 
             // when
             Exception exception = assertThrows(ExpectedError.ResourceNotFoundException.class, () -> {
@@ -394,6 +402,7 @@ class ProductsServiceImplTest {
         @Test
         @DisplayName("상품이 존재하고 모든 값을 수정한다")
         void 상품이_존재하고_모든_값을_수정한다() {
+
             // given
             Long productId = 1L;
             UpdateProductRequest request = new UpdateProductRequest(
@@ -404,6 +413,8 @@ class ProductsServiceImplTest {
                     333,
                     333
             );
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
+
             // when
             productsService.updateProduct(productId, request);
 
@@ -426,6 +437,8 @@ class ProductsServiceImplTest {
                     null,
                     null
             );
+            Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
+
             // when
             productsService.updateProduct(productId, request);
 

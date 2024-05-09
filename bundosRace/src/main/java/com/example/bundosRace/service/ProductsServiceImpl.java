@@ -11,6 +11,7 @@ import com.example.bundosRace.repository.ProductsRepository;
 import com.example.bundosRace.repository.SellerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -99,7 +100,7 @@ public class ProductsServiceImpl implements ProductsService {
     public void sellProducts(SellProductsRequest sellProductsRequest) {
         sellProductsRequest.sellProducts().forEach((saleProduct) -> {
             Product product = productsRepository.findById(saleProduct.productId())
-                    .orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 "+ saleProduct.productId() +" 상품이 존재하지 않습니다."));
+                    .orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 " + saleProduct.productId() + " 상품이 존재하지 않습니다."));
             product.sell(saleProduct.count(), saleProduct.optionIds());
         });
     }
@@ -123,5 +124,6 @@ public class ProductsServiceImpl implements ProductsService {
             option.setOptionGroup(optionGroup);
             optionGroup.addOption(option);
         });
+
     }
 }
