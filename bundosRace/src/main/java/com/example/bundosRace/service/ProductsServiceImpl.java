@@ -8,6 +8,7 @@ import com.example.bundosRace.dto.response.ProductListResponse;
 import com.example.bundosRace.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -102,8 +103,6 @@ public class ProductsServiceImpl implements ProductsService {
         });
     }
 
-
-
     private void addOptionGroupsInProduct(CreateProductRequest request, Product product) {
         request.optionGroups().forEach((optionGroupRequest) -> {
             OptionGroup optionGroup = optionGroupRequest.toEntity();
@@ -118,6 +117,7 @@ public class ProductsServiceImpl implements ProductsService {
             option.setOptionGroup(optionGroup);
             optionGroup.addOption(option);
         });
+
     }
 
     @Override
@@ -126,15 +126,8 @@ public class ProductsServiceImpl implements ProductsService {
         int maxValue = 0;
         if(endPrice == 0) maxValue = Integer.MAX_VALUE;
         else maxValue = endPrice;
-
-        //categoryId랑 sellerId가 0이 들어오면 타는 로직을 타야 함
-        
-
-        //sort로직
-
-
+      
         Page<Product> productListPage = productListCustom.filterProductList(categoryId,startPrice,maxValue,sellerId,pageable);
-
         return productListPage.map(ProductListResponse :: fromEntity);
     }
 }
