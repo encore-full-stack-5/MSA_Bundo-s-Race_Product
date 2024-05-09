@@ -5,20 +5,19 @@ import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
 import com.example.bundosRace.repository.*;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,28 +28,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 // Get은 테스트안함
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserService 테스트")
 class ProductsServiceImplTest {
     private static final Logger log = LoggerFactory.getLogger(ProductsServiceImplTest.class);
-    @Autowired
-    private ProductsService productsService;
 
-    @MockBean
+    @Mock
     private ProductsRepository productsRepository;
-    @MockBean
+    @Mock
     private CategoryRepository categoryRepository;
-    @MockBean
+    @Mock
     private SellerRepository sellerRepository;
-    @MockBean
+    @Mock
     private OptionGroupRepository optionGroupRepository;
-    @MockBean
+    @Mock
     private OptionRepository optionRepository;
+    @Mock
+    private ProductListQueryRepository productOptionRepository;
 
-
-    private final Category category = new Category(1L, "test");
-    private final Seller seller = new Seller(1L, "test", "test", LocalDateTime.now());
+    @InjectMocks
+    private ProductsServiceImpl productsService;
+    
+    private final Category dummyCategory = new Category(1L, "test");
+    private final Seller dummySeller = new Seller(1L, "test", "test", LocalDateTime.now());
     private final Option dummyOption = Option.builder().id(1L).name("test").build();
     private final List<Option> dummyOptions = List.of(Option.builder().id(1L).name("test1").amount(1000L).build(), Option.builder().id(2L).name("test2").amount(1000L).build());
     private final OptionGroup dummyOptionGroup = OptionGroup.builder()
@@ -61,7 +61,7 @@ class ProductsServiceImplTest {
             .amount(1111)
             .discountRate(50)
             .sellCount(0)
-            .category(category)
+            .category(dummyCategory)
             .optionGroups(new ArrayList<>(List.of(dummyOptionGroup)))
             .build();
 
@@ -91,13 +91,13 @@ class ProductsServiceImplTest {
         );
     }
 
-    @BeforeEach
+    @Before("setup")
     void setup() {
-        // 각 테스트 실행 전 공통 설정, Mock repository 리턴값 설정
-        Mockito.when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(category));
-        Mockito.when(optionRepository.findById(anyLong())).thenReturn(Optional.of(dummyOption));
-        Mockito.when(optionGroupRepository.findById(anyLong())).thenReturn(Optional.of(dummyOptionGroup));
-        Mockito.when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(seller));
+        categoryRepository = Mockito.mock(CategoryRepository.class);
+        optionRepository = Mockito.mock(OptionRepository.class);
+        optionGroupRepository = Mockito.mock(OptionGroupRepository.class);
+        sellerRepository = Mockito.mock(SellerRepository.class);
+        productsRepository = Mockito.mock(ProductsRepository.class);
     }
 
     @Nested
@@ -109,7 +109,8 @@ class ProductsServiceImplTest {
         void 정상적으로_상품을_생성한다() {
             // given
             CreateProductRequest request = makeDummyRequest();
-//            Mockito.when(productsRepository.save(Mockito.any(Product.class))).thenReturn(dummyProduct);
+            Mockito.when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(dummyCategory));
+            Mockito.when(sellerRepository.findById(anyLong())).thenReturn(Optional.of(dummySeller));
 
             // when
             productsService.createProduct(request);
@@ -144,6 +145,7 @@ class ProductsServiceImplTest {
             // given
             CreateProductRequest request = makeDummyRequest();
             Mockito.when(sellerRepository.findById(anyLong())).thenReturn(Optional.empty());
+            Mockito.when(categoryRepository.findById(anyLong())).thenReturn(Optional.of(dummyCategory));
 
             // when
             Exception exception = assertThrows(UnexpectedError.IllegalArgumentException.class, () -> {
