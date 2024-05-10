@@ -48,7 +48,7 @@ class ProductsServiceImplTest {
 
     @InjectMocks
     private ProductsServiceImpl productsService;
-    
+
     private final Category dummyCategory = new Category(1L, "test");
     private final Seller dummySeller = new Seller(1L, "test", "test", LocalDateTime.now());
     private final Option dummyOption = Option.builder().id(1L).name("test").build();

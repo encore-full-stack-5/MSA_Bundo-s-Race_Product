@@ -11,7 +11,7 @@ public record UpdateProductRequest(
         Integer price,
         Integer discountRate,
         Integer deliveryPrice,
-        Integer status
+        Integer status // 1 판매중 2 매진 3 숨기기
 ) {
 
 }
