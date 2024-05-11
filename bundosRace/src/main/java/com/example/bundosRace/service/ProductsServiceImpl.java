@@ -11,8 +11,10 @@ import lombok.extern.log4j.Log4j2;
 import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class ProductsServiceImpl implements ProductsService {
     private final SellerRepository sellerRepository;
     private final OptionGroupRepository optionGroupRepository;
     private final ProductListCustom productListCustom;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     @Transactional
@@ -91,6 +94,7 @@ public class ProductsServiceImpl implements ProductsService {
         Product product = productsRepository.findById(productId)
                 .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 상품이 존재하지 않습니다."));
         product.updateEntity(updateProductRequest);
+        updateCart(product);
     }
 
     @Override
@@ -129,5 +133,27 @@ public class ProductsServiceImpl implements ProductsService {
       
         Page<Product> productListPage = productListCustom.filterProductList(categoryId,startPrice,maxValue,sellerId,pageable);
         return productListPage.map(ProductListResponse :: fromEntity);
+    }
+
+    @Override
+    public void validateProduct(Long productId, ValidateProductRequest validateProductRequest) {
+        Product product = productsRepository.findById(productId).orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 상품이 존재하지 않습니다."));
+        product.validatePossibleSale(validateProductRequest.optionIds(), validateProductRequest.count(), validateProductRequest.price());
+    }
+
+    private void updateCart(Product product) {
+        String url = "http://211.198.134.9:9000/api/v1/carts";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(
+                product.getId(),
+                product.getName(),
+                product.getPrice(),
+                product.getDiscountRate(),
+                product.getDeliveryPrice()
+        );
+        HttpEntity<UpdateCartItemRequest> requestEntity = new HttpEntity<>(updateCartItemRequest, headers);
+        ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Void.class);
+        System.out.println(response.getBody());
     }
 }

@@ -3,6 +3,7 @@ package com.example.bundosRace.domain;
 import com.example.bundosRace.core.error.ExpectedError;
 import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.core.util.JsonStringListConverter;
+import com.example.bundosRace.core.util.LogUtil;
 import com.example.bundosRace.dto.request.UpdateProductRequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -57,9 +59,8 @@ public class Product {
     @Column(name ="created_at")
     private LocalDateTime createdAt;
 
-    @Setter
     @Column(name ="status")
-    private Integer status;
+    private Integer status; // 1판매중 2매진 3판매중지
 
     @Column(name ="sell_count")
     private int sellCount;
@@ -99,6 +100,7 @@ public class Product {
         }
         this.amount -= count;
         this.sellCount += count;
+        if(amount == 0) status = 2;
         if(optionIds != null)  {
             optionIds.forEach(optionId -> sellOption(optionId, count));
         }
@@ -112,7 +114,34 @@ public class Product {
         optionGroup.sellOption(optionId, count);
     }
 
+    public void validatePossibleSale(List<Long> optionIds, int count, int price) {
+
+        if(status != 1) throw new ExpectedError.BusinessException("판매중인 상품이 아닙니다.");
+        if(this.amount < count) throw new ExpectedError.ResourceNotFoundException("상품 재고가 부족합니다.");
+
+        // 옵션 존재 유뮤 확인
+        List<Option> options = getOptionGroups().stream()
+                .map(OptionGroup::getOptions)
+                .filter(ogOptions -> ogOptions.stream().anyMatch(o -> optionIds.contains(o.getId())))
+                .flatMap(List::stream)
+                .filter(o -> optionIds.contains(o.getId()))
+                .toList();
+
+        if(options.size() != optionIds.size()) throw new ExpectedError.BusinessException("옵션 정보가 변경되어서 구매가 불가능합니다..");
+
+        int sum = 0;
+        for(Option option : options) {
+            sum += option.getPrice();
+            option.checkAmount(count); // 옵션수량 체크후 에러 반환
+        }
+
+        // 옵션 가격 확인
+        int totalPrice = sum + this.price;
+        if(totalPrice != price) throw new ExpectedError.BusinessException("가격이 변경되어 구매불가능합니다.");
+    }
+
     public void delete() {
+        status = 3;
         this.isDeleted = true;
     }
 }

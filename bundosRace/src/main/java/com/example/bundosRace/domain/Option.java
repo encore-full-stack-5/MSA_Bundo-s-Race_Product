@@ -42,4 +42,14 @@ public class Option {
         }
         this.amount -= amount;
     }
+
+    public void addAmount(int amount) {
+        this.amount += amount;
+    }
+
+    public void checkAmount(int amount) {
+        if (this.amount < amount) {
+            throw new ExpectedError.ResourceNotFoundException("옵션 "+ name +" 재고가 부족합니다.");
+        }
+    }
 }
