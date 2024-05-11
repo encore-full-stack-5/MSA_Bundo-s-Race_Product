@@ -21,6 +21,7 @@ public class ProductListResponse {
     private int status;
     private String sellerName;
     private LocalDateTime createdAt;
+    private int deliveryPrice;
 
     public static ProductListResponse fromEntity(Product product){
         return ProductListResponse.builder()
@@ -32,6 +33,7 @@ public class ProductListResponse {
                 .status(product.getStatus())
                 .sellerName(product.getSeller().getName())
                 .createdAt(product.getCreatedAt())
+                .deliveryPrice(product.getDeliveryPrice())
                 .build();
     }
 }

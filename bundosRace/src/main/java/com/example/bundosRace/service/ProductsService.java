@@ -33,5 +33,5 @@ public interface ProductsService {
 
     Page<ProductListResponse> getProductListByCategoryAndSort(
             Long category, Integer startPrice,Integer endPrice,Long sellerId,Pageable pageable);
-
+    void validateProduct(Long productId, ValidateProductRequest validateProductRequest);
 }

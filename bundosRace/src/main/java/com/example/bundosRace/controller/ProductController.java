@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -103,11 +104,21 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.getProductListByCategoryAndSort(categoryId , startPrice , endPrice , sellerId , pageable));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(
             @PathVariable("id") Long productId
     ) {
         productService.deleteProduct(productId);
+        return ResponseEntity.ok("success");
+    }
+
+    @GetMapping("{id}/validate")
+    public ResponseEntity<?> validateProduct(
+            @PathVariable("id") Long productId,
+            @Validated @RequestBody ValidateProductRequest request
+    ) {
+        productService.validateProduct(productId, request);
         return ResponseEntity.ok("success");
     }
 }
