@@ -28,7 +28,7 @@ public class ProductsServiceImpl implements ProductsService {
     private final SellerRepository sellerRepository;
     private final OptionGroupRepository optionGroupRepository;
     private final ProductListCustom productListCustom;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     @Override
     @Transactional
@@ -153,7 +153,6 @@ public class ProductsServiceImpl implements ProductsService {
                 product.getDeliveryPrice()
         );
         HttpEntity<UpdateCartItemRequest> requestEntity = new HttpEntity<>(updateCartItemRequest, headers);
-        ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Void.class);
-        System.out.println(response.getBody());
+        restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Void.class);
     }
 }

@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,6 +48,8 @@ class ProductsServiceImplTest {
     private OptionRepository optionRepository;
     @Mock
     private ProductListQueryRepository productOptionRepository;
+    @Mock
+    private RestTemplate restTemplate; // Mock RestTemplat
 
     @InjectMocks
     private ProductsServiceImpl productsService;
@@ -392,10 +395,10 @@ class ProductsServiceImplTest {
             UpdateProductRequest request = new UpdateProductRequest(
                     "change",
                     "change",
-                    333,
-                    333,
-                    333,
-                    333
+                    555,
+                    555,
+                    555,
+                    555
             );
 
             // when
@@ -416,10 +419,10 @@ class ProductsServiceImplTest {
             UpdateProductRequest request = new UpdateProductRequest(
                     "change",
                     "change",
-                    333,
-                    333,
-                    333,
-                    333
+                    555,
+                    555,
+                    555,
+                    555
             );
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
 
@@ -427,8 +430,8 @@ class ProductsServiceImplTest {
             productsService.updateProduct(productId, request);
 
             // then
-            assertThat(dummyProduct.getPrice()).isEqualTo(333);
-            assertThat(dummyProduct.getDiscountRate()).isEqualTo(333);
+            assertThat(dummyProduct.getPrice()).isEqualTo(555);
+            assertThat(dummyProduct.getDiscountRate()).isEqualTo(555);
             assertThat(dummyProduct.getName()).isEqualTo("change");
         }
 
@@ -440,7 +443,7 @@ class ProductsServiceImplTest {
             UpdateProductRequest request = new UpdateProductRequest(
                     null,
                     null,
-                    333,
+                    555,
                     null,
                     null,
                     null
@@ -451,7 +454,7 @@ class ProductsServiceImplTest {
             productsService.updateProduct(productId, request);
 
             // then
-            assertThat(dummyProduct.getPrice()).isEqualTo(333);
+            assertThat(dummyProduct.getPrice()).isEqualTo(555);
             assertThat(dummyProduct.getDiscountRate()).isEqualTo(50);
             assertThat(dummyProduct.getName()).isEqualTo("test");
         }
