@@ -152,17 +152,17 @@ public class Product {
         this.isDeleted = true;
     }
 
-//    public ProductForElastic toProductForElastic() {
-//        return ProductForElastic.builder()
-//                .id(id)
-//                .name(name)
-//                .description(description)
-//                .price(price)
-//                .discountPrice(discountPrice)
-////                .optionName(optionGroups.stream().flatMap(og -> og.getOptions().stream()).map(Option::getName).toList())
-//                .sellCount(sellCount)
-//                .brand(seller.getName())
-//                .categoryName(category.getName())
-//                .build();
-//    }
+    public ProductForElastic toProductForElastic() {
+        return ProductForElastic.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .price(price)
+                .discountPrice(discountPrice)
+//                .optionName(optionGroups.stream().flatMap(og -> og.getOptions().stream()).map(Option::getName).toList())
+                .sellCount(sellCount)
+                .brand(seller.getName())
+                .categoryName(category.getName())
+                .build();
+    }
 }

@@ -57,7 +57,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	// search tool
-//	implementation 'org.springframework.data:spring-data-elasticsearch:5.2.5'
+	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 
 	//logging
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
