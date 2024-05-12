@@ -11,18 +11,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("api/v1/sellers")
-@RequiredArgsConstructor
-public class SellerController {
-
-    private final ProductsService productService;
-
-    @PostMapping
-    public ResponseEntity<?> createSeller(
-            @Valid @RequestBody CreateSellerRequest request
-    ) {
-        productService.createSeller(request);
-        return ResponseEntity.ok("success");
-    }
-}
+//@RestController
+//@RequestMapping("api/v1/search")
+//@RequiredArgsConstructor
+//public class SearchController {
+//
+//    private final SearchService searchService;
+//
+//    @PostMapping
+//    public ResponseEntity<?> test() {
+//        searchService.test();
+//        return ResponseEntity.ok("success");
+//    }
+//}
