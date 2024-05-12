@@ -71,7 +71,7 @@ public class ProductController {
         return ResponseEntity.ok("success");
     }
 
-    @PatchMapping("sell/{id}")
+    @PatchMapping("sell")
     public ResponseEntity<?> sellProduct(
             @RequestBody SellProductsRequest sellProductsRequest
     ) {

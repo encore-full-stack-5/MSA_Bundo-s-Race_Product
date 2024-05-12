@@ -260,7 +260,7 @@ class ProductsServiceImplTest {
         @DisplayName("옵셥을 포함한 상품이 정상적으로 판매된다")
         void 옵셥을_포함한_상품이_정상적으로_판매된다() {
             // given
-            SellProductsRequest request = new SellProductsRequest(1, List.of(
+            SellProductsRequest request = new SellProductsRequest(List.of(
                     new sellProduct(1L, 1, List.of(1L, 2L)),
                     new sellProduct(2L, 1, List.of(3L))
             ));
@@ -289,7 +289,7 @@ class ProductsServiceImplTest {
         void 옵셥이_없는_상품이_정상적으로_판매된다() {
             // given
             Long productId = 1L;
-            SellProductsRequest request = new SellProductsRequest(1, List.of(
+            SellProductsRequest request = new SellProductsRequest(List.of(
                     new sellProduct(productId, 1, null)
             ));
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
@@ -308,7 +308,7 @@ class ProductsServiceImplTest {
         void 상품이_존재하지_않으면_에러를_반환한다() {
             // given
             Long productId = 100L;
-            SellProductsRequest request = new SellProductsRequest(1, List.of(
+            SellProductsRequest request = new SellProductsRequest(List.of(
                     new sellProduct(productId, 1, List.of(1L, 2L))
             ));
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.empty());
@@ -328,7 +328,7 @@ class ProductsServiceImplTest {
             // given
             Long productId = 1L;
             Long optionId = 6L;
-            SellProductsRequest request = new SellProductsRequest(1, List.of(
+            SellProductsRequest request = new SellProductsRequest(List.of(
                     new sellProduct(productId, 1, List.of(optionId))
             ));
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
@@ -349,7 +349,7 @@ class ProductsServiceImplTest {
             // given
             // given
             Long productId = 1L;
-            SellProductsRequest request = new SellProductsRequest(1, List.of(
+            SellProductsRequest request = new SellProductsRequest(List.of(
                     new sellProduct(productId, 10000, null)
             ));
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
@@ -368,7 +368,7 @@ class ProductsServiceImplTest {
         void 옵션수량이_부족하면_에러를_반환한다() {
             // given
             Long productId = 1L;
-            SellProductsRequest request = new SellProductsRequest(1, List.of(
+            SellProductsRequest request = new SellProductsRequest(List.of(
                     new sellProduct(productId, 1050, List.of(1L, 2L))
             ));
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(dummyProduct));
@@ -554,7 +554,7 @@ class ProductsServiceImplTest {
             // given
             Long productId = 1L;
             ValidateProductRequest request = new ValidateProductRequest(List.of(1L, 2L), 1, 1000);
-            Product product = Product.builder().id(productId).price(1000).status(1).amount(10000).optionGroups(new ArrayList<>(List.of(dummyOptionGroup))).build();
+            Product product = Product.builder().id(productId).price(1000).discountPrice(1000).status(1).amount(10000).optionGroups(new ArrayList<>(List.of(dummyOptionGroup))).build();
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(product));
 
             // when
@@ -572,7 +572,7 @@ class ProductsServiceImplTest {
             // given
             Long productId = 1L;
             ValidateProductRequest request = new ValidateProductRequest(List.of(1L, 2L), 2000, 1);
-            Product product = Product.builder().id(productId).status(1).amount(1000).price(1000).optionGroups(new ArrayList<>(List.of(dummyOptionGroup))).build();
+            Product product = Product.builder().id(productId).status(1).amount(1000).discountPrice(1000).price(1000).optionGroups(new ArrayList<>(List.of(dummyOptionGroup))).build();
             Mockito.when(productsRepository.findById(productId)).thenReturn(Optional.of(product));
 
             // when

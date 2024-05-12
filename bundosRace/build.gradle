@@ -52,8 +52,12 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+	// eureka
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	// search tool
+//	implementation 'org.springframework.data:spring-data-elasticsearch:5.2.5'
 
 	//logging
 	implementation 'org.springframework.boot:spring-boot-starter-logging'

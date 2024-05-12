@@ -32,7 +32,7 @@ public class ProductListQueryRepository implements ProductListCustom{
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         if(startPrice != null && endPrice != null)
-            booleanBuilder.and(product.price.between(startPrice,endPrice));
+            booleanBuilder.and(product.discountPrice.between(startPrice,endPrice));
         if (categoryId != null)
             booleanBuilder.and(product.category.id.eq(categoryId));
         if(sellerId != null)
@@ -78,7 +78,7 @@ public class ProductListQueryRepository implements ProductListCustom{
                 // 서비스에서 넣어준 정렬 조건을 스위치 케이스 문을 활용하여 셋팅하여 준다.
                 switch (order.getProperty()){
                     case "price":
-                        return new OrderSpecifier<>(direction, product.price);
+                        return new OrderSpecifier<>(direction, product.discountPrice);
                     case "createdAt":
                         return new OrderSpecifier<>(direction, product.createdAt);
                 }
