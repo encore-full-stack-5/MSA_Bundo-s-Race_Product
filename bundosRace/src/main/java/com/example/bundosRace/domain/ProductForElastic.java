@@ -16,7 +16,7 @@ import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 
 
 @Document(
-        indexName = "product",
+        indexName = "products",
         writeTypeHint = WriteTypeHint.FALSE //
 )
 @Getter

@@ -2,23 +2,16 @@ package com.example.bundosRace.service;
 
 import com.example.bundosRace.domain.Product;
 import com.example.bundosRace.domain.ProductForElastic;
-import com.example.bundosRace.repository.jpa.ProductsRepository;
 import com.example.bundosRace.repository.elastic.ProductDocumentRepository;
+import com.example.bundosRace.repository.jpa.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
-import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -31,13 +24,13 @@ public class SearchServiceImpl implements SearchService {
     private ProductsRepository productsRepository;
 
     public void delete() {
-        elasticsearchOperations.indexOps(IndexCoordinates.of("product")).delete();
+        elasticsearchOperations.indexOps(IndexCoordinates.of("products")).delete();
     }
 
     @Transactional
     public void init() {
-        delete();
-        createIndexWithNori();
+//        delete();
+//        createIndexWithNori();
         insertSampleData();
     }
 
@@ -47,46 +40,45 @@ public class SearchServiceImpl implements SearchService {
         // 인덱스 존재 여부 확인
         boolean indexExists = elasticsearchOperations.indexOps(indexCoordinates).exists();
 
-        if (!indexExists) {
-            Map<String, Object> settings = Map.of(
-                    "index", Map.of(
-                            "analysis", Map.of(
-                                    "analyzer", Map.of(
-                                            "korean", Map.of(
-                                                    "type", "custom",
-                                                    "tokenizer", "nori_tokenizer",
-                                                    "filter", List.of("nori_readingform", "lowercase", "nori_part_of_speech")
-                                            )
-                                    )
-                            )
-                    )
-            );
+        Map<String, Object> settings = Map.of(
+                "index", Map.of(
+                        "analysis", Map.of(
+                                "analyzer", Map.of(
+                                        "korean", Map.of(
+                                                "type", "custom",
+                                                "tokenizer", "nori_tokenizer",
+                                                "filter", List.of("nori_readingform", "lowercase", "nori_part_of_speech")
+                                        )
+                                )
+                        )
+                )
+        );
 
-            Map<String, Object> mapping = Map.of(
-                    "properties", Map.of(
-                            "name", Map.of(
-                                    "type", "text",
-                                    "analyzer", "korean"
-                            ),
-                            "description", Map.of(
-                                    "type", "text",
-                                    "analyzer", "korean"
-                            )
-                    )
-            );
+        Map<String, Object> mapping = Map.of(
+                "properties", Map.of(
+                        "name", Map.of(
+                                "type", "text",
+                                "analyzer", "korean"
+                        ),
+                        "description", Map.of(
+                                "type", "text",
+                                "analyzer", "korean"
+                        )
+                )
+        );
 
-            elasticsearchOperations.indexOps(indexCoordinates).create(settings);
-            elasticsearchOperations.indexOps(indexCoordinates).putMapping(ProductForElastic.class);
-        } else {
-            // 적절한 로깅 또는 다른 조치를 취할 수 있습니다.
-            System.out.println("Index already exists and will not be recreated.");
-        }
+        elasticsearchOperations.indexOps(indexCoordinates).create(settings);
+        elasticsearchOperations.indexOps(indexCoordinates).putMapping(ProductForElastic.class);
     }
 
     private void insertSampleData() {
         List<ProductForElastic> productsForElastic = productsRepository.findAll().stream()
                 .map(Product::toProductForElastic)
                 .toList();
+
+        productsForElastic.forEach((product) -> {
+                    System.out.println(product.getName());
+        });
 
         productDocumentRepository.saveAll(productsForElastic);
     }
@@ -101,6 +93,7 @@ public class SearchServiceImpl implements SearchService {
         return productDocumentRepository.findById(id);
     }
 
+    @Transactional
     @Override
     public void test() {
         init();

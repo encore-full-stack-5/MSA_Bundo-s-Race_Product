@@ -20,9 +20,10 @@ public interface ProductsService {
 
     // create
     void createProduct(CreateProductRequest createProductRequest);
+    void createProductList(List<CreateProductRequest> createProductRequestList);
     void createProductOptionGroup(Long productId, CreateOptionGroupRequest createOptionGroupRequest);
     void createProductOption(Long productId, Long optionGroupId, CreateOptionRequest CreateOptionRequest);
-    void createSeller(CreateSellerRequest createSellerRequest);
+
 
     // delete
     void deleteProduct(Long productId);

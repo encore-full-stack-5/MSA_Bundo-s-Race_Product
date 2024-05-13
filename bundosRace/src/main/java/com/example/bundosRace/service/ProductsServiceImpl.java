@@ -53,6 +53,10 @@ public class ProductsServiceImpl implements ProductsService {
         productsRepository.save(product);
     }
 
+    @Override
+    public void createProductList(List<CreateProductRequest> createProductRequestList) {
+        createProductRequestList.forEach(this::createProduct);
+    }
 
     @Override
     @Transactional
@@ -70,13 +74,6 @@ public class ProductsServiceImpl implements ProductsService {
         OptionGroup optionGroup = optionGroupRepository.findById(optionGroupId)
                 .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 옵션 그룹이 존재하지 않습니다."));
         optionGroup.addOption(CreateOptionRequest.toEntity());
-    }
-
-    @Override
-    @Transactional
-    public void createSeller(CreateSellerRequest createSellerRequest) {
-        Seller seller = createSellerRequest.toEntity();
-        sellerRepository.save(seller);
     }
 
     @Override
