@@ -1,4 +1,4 @@
-package com.example.bundosRace.repository;
+package com.example.bundosRace.repository.jpa;
 
 import com.example.bundosRace.domain.Product;
 import com.querydsl.core.BooleanBuilder;

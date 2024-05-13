@@ -42,6 +42,7 @@ public record CreateProductRequest
                 .discountRate(discountRate)
                 .deliveryPrice(deliveryPrice)
                 .discountPrice(price - (price * discountRate / 100))
+                .reviewCount(0)
                 .sellCount(0)
                 .createdAt(LocalDateTime.now())
                 .build();

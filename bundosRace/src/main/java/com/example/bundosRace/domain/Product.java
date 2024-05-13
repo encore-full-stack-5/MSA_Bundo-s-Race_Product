@@ -50,6 +50,10 @@ public class Product {
     @Builder.Default
     private Boolean isDeleted = false;
 
+    @Column(name = "review_count")
+    @Builder.Default
+    private int reviewCount = 0;
+
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OptionGroup> optionGroups = new ArrayList<>();
@@ -152,17 +156,17 @@ public class Product {
         this.isDeleted = true;
     }
 
-//    public ProductForElastic toProductForElastic() {
-//        return ProductForElastic.builder()
-//                .id(id)
-//                .name(name)
-//                .description(description)
-//                .price(price)
-//                .discountPrice(discountPrice)
-////                .optionName(optionGroups.stream().flatMap(og -> og.getOptions().stream()).map(Option::getName).toList())
-//                .sellCount(sellCount)
-//                .brand(seller.getName())
-//                .categoryName(category.getName())
-//                .build();
-//    }
+    public ProductForElastic toProductForElastic() {
+        return ProductForElastic.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .price(price)
+                .discountPrice(discountPrice)
+//                .optionName(optionGroups.stream().flatMap(og -> og.getOptions().stream()).map(Option::getName).toList())
+                .sellCount(sellCount)
+                .brand(seller.getName())
+                .categoryName(category.getName())
+                .build();
+    }
 }

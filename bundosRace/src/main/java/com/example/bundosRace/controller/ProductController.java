@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/products")
 @RequiredArgsConstructor
@@ -27,6 +29,14 @@ public class ProductController {
             @Valid @RequestBody CreateProductRequest request
     ) {
         productService.createProduct(request);
+        return ResponseEntity.ok("success");
+    }
+
+    @PostMapping("/list")
+    public ResponseEntity<?> createProductList(
+            @Valid @RequestBody List<CreateProductRequest> request
+    ) {
+        productService.createProductList(request);
         return ResponseEntity.ok("success");
     }
 

@@ -4,11 +4,11 @@ import com.example.bundosRace.core.error.ExpectedError;
 import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
+import com.example.bundosRace.dto.response.BrandListResponse;
 import com.example.bundosRace.dto.response.ProductListResponse;
-import com.example.bundosRace.repository.*;
+import com.example.bundosRace.repository.jpa.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
@@ -16,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +57,10 @@ public class ProductsServiceImpl implements ProductsService {
         productsRepository.save(product);
     }
 
+    @Override
+    public void createProductList(List<CreateProductRequest> createProductRequestList) {
+        createProductRequestList.forEach(this::createProduct);
+    }
 
     @Override
     @Transactional
@@ -71,13 +78,6 @@ public class ProductsServiceImpl implements ProductsService {
         OptionGroup optionGroup = optionGroupRepository.findById(optionGroupId)
                 .orElseThrow(() -> new UnexpectedError.IllegalArgumentException("해당 옵션 그룹이 존재하지 않습니다."));
         optionGroup.addOption(CreateOptionRequest.toEntity());
-    }
-
-    @Override
-    @Transactional
-    public void createSeller(CreateSellerRequest createSellerRequest) {
-        Seller seller = createSellerRequest.toEntity();
-        sellerRepository.save(seller);
     }
 
     @Override

@@ -48,6 +48,8 @@ public class QProduct extends EntityPathBase<Product> {
 
     public final NumberPath<Integer> price = createNumber("price", Integer.class);
 
+    public final NumberPath<Integer> reviewCount = createNumber("reviewCount", Integer.class);
+
     public final NumberPath<Integer> sellCount = createNumber("sellCount", Integer.class);
 
     public final QSeller seller;

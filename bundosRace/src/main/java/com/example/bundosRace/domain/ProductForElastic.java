@@ -2,29 +2,43 @@ package com.example.bundosRace.domain;
 
 import com.example.bundosRace.core.util.JsonStringListConverter;
 import jakarta.persistence.*;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
+
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 
 
-//@Builder
-//@Getter
-//@Document(indexName = "product-index")
-//public class ProductForElastic {
-//    @Id
-//    private Long id;
-//    private String name;
-//    private String description;
-//    private Integer price;
-//    private Integer discountPrice;
-//    private List<String> optionName;
-//    private int sellCount;
-//    private String brand;
-//    private String categoryName;
-//
-//}
+@Document(
+        indexName = "products",
+        writeTypeHint = WriteTypeHint.FALSE //
+)
+@Getter
+@Builder
+public class ProductForElastic {
+    @Id
+    private Long id;
+//    @Field(name = "name", type = FieldType.Text)
+    private String name;
+//    @Field(name = "description", type = FieldType.Text)
+    private String description;
+//    @Field(name = "price", type = FieldType.Integer)
+    private Integer price;
+//    @Field(name = "discountPrice", type = FieldType.Integer)
+    private Integer discountPrice;
+//    @Field(name = "discountRate", type = FieldType.Integer)
+    private List<String> optionName;
+//    @Field(name = "sellCount", type = FieldType.Integer)
+    private int sellCount;
+//    @Field(name = "brand", type = FieldType.Text)
+    private String brand;
+//    @Field(name = "categoryName", type = FieldType.Text)
+    private String categoryName;
+
+}
