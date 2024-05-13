@@ -31,4 +31,10 @@ public class SellerController {
     public ResponseEntity<List<BrandListResponse>> getAllBrand() {
         return ResponseEntity.ok(sellerService.getAllBrand());
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<BrandListResponse>> getAllBrandByCategory(@PathVariable("categoryId") long categoryId) {
+        return ResponseEntity.ok(sellerService.getAllBrandByCategory(categoryId));
+    }
+
 }

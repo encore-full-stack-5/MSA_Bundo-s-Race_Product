@@ -4,6 +4,7 @@ import com.example.bundosRace.core.error.ExpectedError;
 import com.example.bundosRace.core.error.UnexpectedError;
 import com.example.bundosRace.domain.*;
 import com.example.bundosRace.dto.request.*;
+import com.example.bundosRace.dto.response.BrandListResponse;
 import com.example.bundosRace.dto.response.ProductListResponse;
 import com.example.bundosRace.repository.jpa.*;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor

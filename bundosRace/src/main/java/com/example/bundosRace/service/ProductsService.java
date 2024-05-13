@@ -6,6 +6,7 @@ import com.example.bundosRace.dto.request.*;
 import com.example.bundosRace.dto.request.CreateSellerRequest;
 import com.example.bundosRace.dto.request.CreateProductRequest;
 import com.example.bundosRace.dto.request.UpdateProductRequest;
+import com.example.bundosRace.dto.response.BrandListResponse;
 import com.example.bundosRace.dto.response.ProductListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -9,6 +9,7 @@ import java.util.List;
 public interface SellerService {
 
     void createSeller(CreateSellerRequest createSellerRequest);
-
     List<BrandListResponse> getAllBrand();
+    List<BrandListResponse> getAllBrandByCategory(long categoryId);
+
 }
