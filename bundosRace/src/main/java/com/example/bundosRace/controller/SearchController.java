@@ -1,12 +1,15 @@
 package com.example.bundosRace.controller;
 
-import com.example.bundosRace.dto.request.CreateSellerRequest;
-import com.example.bundosRace.service.ProductsService;
+import com.example.bundosRace.domain.BaseElasticData;
+import com.example.bundosRace.domain.ProductForElastic;
+import com.example.bundosRace.dto.response.TotalSearchResponse;
 import com.example.bundosRace.service.SearchService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/v1/search")
@@ -26,8 +29,20 @@ public class SearchController {
         return ResponseEntity.ok(searchService.findById(id));
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<TotalSearchResponse> totalSearch(
+            @RequestParam("keyword") String keyword
+    ) {
+        return ResponseEntity.ok(searchService.totalSearch(keyword));
+    }
+
+    @GetMapping("/test")
+    public void testSend() {
+        searchService.sendKafkaMessage();
+    }
+
     @GetMapping
-    public ResponseEntity<?> search(@RequestParam("keyword") String keyword) {
-        return ResponseEntity.ok(searchService.search(keyword));
+    public ResponseEntity<List<ProductForElastic>> search(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(searchService.searchProduct(keyword));
     }
 }
