@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -23,22 +24,17 @@ import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 @Builder
 public class ProductForElastic {
     @Id
-    private Long id;
-//    @Field(name = "name", type = FieldType.Text)
-    private String name;
-//    @Field(name = "description", type = FieldType.Text)
-    private String description;
-//    @Field(name = "price", type = FieldType.Integer)
+    long id;
+    long domainId;
+    int type; // 1 상품 2 블로그 3 카페 4 부동산
+    String name; // 타이틀
+    String description; // 컨텐츠
+    String url ; //  http/192.168.0.1/post/2
     private Integer price;
-//    @Field(name = "discountPrice", type = FieldType.Integer)
     private Integer discountPrice;
-//    @Field(name = "discountRate", type = FieldType.Integer)
     private List<String> optionName;
-//    @Field(name = "sellCount", type = FieldType.Integer)
     private int sellCount;
-//    @Field(name = "brand", type = FieldType.Text)
     private String brand;
-//    @Field(name = "categoryName", type = FieldType.Text)
     private String categoryName;
 
 }

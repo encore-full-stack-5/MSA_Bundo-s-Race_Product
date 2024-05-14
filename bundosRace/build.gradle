@@ -58,10 +58,10 @@ dependencies {
 
 	// search tool
 	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+	implementation 'org.springframework.kafka:spring-kafka'
 
 	//logging
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
-
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.1'

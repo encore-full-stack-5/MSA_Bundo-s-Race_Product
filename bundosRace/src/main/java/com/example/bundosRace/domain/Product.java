@@ -10,6 +10,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -159,14 +160,12 @@ public class Product {
     public ProductForElastic toProductForElastic() {
         return ProductForElastic.builder()
                 .id(id)
+                .domainId(id)
                 .name(name)
+                .type(1)
                 .description(description)
                 .price(price)
-                .discountPrice(discountPrice)
-//                .optionName(optionGroups.stream().flatMap(og -> og.getOptions().stream()).map(Option::getName).toList())
-                .sellCount(sellCount)
-                .brand(seller.getName())
-                .categoryName(category.getName())
+                .url("http://192.168.0.16:3000/products?id="+id)
                 .build();
     }
 }
