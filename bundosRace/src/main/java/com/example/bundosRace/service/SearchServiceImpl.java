@@ -36,12 +36,6 @@ public class SearchServiceImpl implements SearchService {
     public void delete() {
         elasticsearchOperations.indexOps(IndexCoordinates.of("products")).delete();
     }
-    @Transactional
-    public void init() {
-//        delete();
-//        createIndexWithNori();
-        insertProductData();
-    }
 
     @Override
     public KafkaResponse<String> sendKafkaMessage() {
@@ -91,11 +85,4 @@ public class SearchServiceImpl implements SearchService {
         return productDocumentRepository.findById(id);
     }
 
-
-
-    @Transactional
-    @Override
-    public void test() {
-        init();
-    }
 }

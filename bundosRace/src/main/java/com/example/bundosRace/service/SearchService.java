@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface SearchService {
-    void test();
-
     void insertBlogData(List<BlogRequest> blogs);
     void insertLandData(List<LandRequest> lands);
     List<ProductForElastic> searchProduct(String keyword);

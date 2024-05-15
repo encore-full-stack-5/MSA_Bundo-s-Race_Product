@@ -30,6 +30,7 @@ public class ProductForElastic {
     String name; // 타이틀
     String description; // 컨텐츠
     String url ; //  http/192.168.0.1/post/2
+    String baseUrl;
     private Integer price;
     private Integer discountPrice;
     private List<String> optionName;
