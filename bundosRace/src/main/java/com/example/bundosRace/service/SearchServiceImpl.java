@@ -7,8 +7,10 @@ import com.example.bundosRace.domain.BlogDocument;
 import com.example.bundosRace.domain.Product;
 import com.example.bundosRace.domain.ProductForElastic;
 import com.example.bundosRace.dto.request.BlogRequest;
+import com.example.bundosRace.dto.request.LandRequest;
 import com.example.bundosRace.dto.response.TotalSearchResponse;
 import com.example.bundosRace.repository.elastic.BlogDocumentRepository;
+import com.example.bundosRace.repository.elastic.LandDocumentRepository;
 import com.example.bundosRace.repository.elastic.ProductDocumentRepository;
 import com.example.bundosRace.repository.jpa.ProductsRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class SearchServiceImpl implements SearchService {
     private final ElasticsearchOperations elasticsearchOperations;
     private final ProductDocumentRepository productDocumentRepository;
     private final BlogDocumentRepository blogDocumentRepository;
+    private final LandDocumentRepository landDocumentRepository;
     private final ProductsRepository productsRepository;
     private final PostProducer producer;
 
@@ -58,6 +61,11 @@ public class SearchServiceImpl implements SearchService {
     public void insertBlogData(List<BlogRequest> blogs) {
         List<BlogDocument> blogDocuments = blogs.stream().map(BlogRequest::toDocument).toList();
         blogDocumentRepository.saveAll(blogDocuments);
+    }
+
+    @Override
+    public void insertLandData(List<LandRequest> lands) {
+        landDocumentRepository.saveAll(lands.stream().map(LandRequest::toDocument).toList());
     }
 
     @Override

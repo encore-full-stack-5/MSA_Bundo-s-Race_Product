@@ -5,6 +5,7 @@ import com.example.bundosRace.domain.BaseElasticData;
 import com.example.bundosRace.domain.BlogDocument;
 import com.example.bundosRace.domain.ProductForElastic;
 import com.example.bundosRace.dto.request.BlogRequest;
+import com.example.bundosRace.dto.request.LandRequest;
 import com.example.bundosRace.dto.response.TotalSearchResponse;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public interface SearchService {
     void test();
 
     void insertBlogData(List<BlogRequest> blogs);
+    void insertLandData(List<LandRequest> lands);
     List<ProductForElastic> searchProduct(String keyword);
 
     List<BlogDocument> searchBlog(String keyword);
