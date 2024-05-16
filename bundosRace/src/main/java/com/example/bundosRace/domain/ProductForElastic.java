@@ -24,13 +24,13 @@ import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 @Builder
 public class ProductForElastic {
     @Id
-    long id;
-    long domainId;
-    int type; // 1 상품 2 블로그 3 카페 4 부동산
-    String name; // 타이틀
-    String description; // 컨텐츠
-    String url ; //  http/192.168.0.1/post/2
-    String baseUrl;
+    private long id;
+    private long domainId;
+    private int type; // 1 상품 2 블로그 3 카페 4 부동산
+    private String name; // 타이틀
+    private String description; // 컨텐츠
+    private String url ; //  http/192.168.0.1/post/2
+    private String baseUrl;
     private Integer price;
     private Integer discountPrice;
     private List<String> optionName;
