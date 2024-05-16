@@ -1,18 +1,11 @@
 package com.example.bundosRace.domain;
 
-import com.example.bundosRace.core.util.JsonStringListConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.WriteTypeHint;
 
 
@@ -33,9 +26,10 @@ public class ProductForElastic {
     private String baseUrl;
     private Integer price;
     private Integer discountPrice;
+    private Integer discountRate;
     private List<String> optionName;
     private int sellCount;
-    private String brand;
+    private String sellerName;
     private String categoryName;
 
 }

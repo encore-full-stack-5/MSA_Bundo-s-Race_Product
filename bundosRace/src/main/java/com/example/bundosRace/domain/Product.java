@@ -10,7 +10,6 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,6 +51,7 @@ public class Product {
     private Boolean isDeleted = false;
 
     @Column(name = "review_count")
+    @Setter
     @Builder.Default
     private int reviewCount = 0;
 
@@ -93,6 +93,7 @@ public class Product {
             price = request.price();
             updateDiscountPrice();
         }
+        if(request.reviewCount() != null) reviewCount = request.reviewCount();
         if (request.discountRate() != null) {
             discountRate = request.discountRate();
             updateDiscountPrice();
@@ -165,8 +166,14 @@ public class Product {
                 .type(1)
                 .description(description)
                 .price(price)
+                .discountPrice(discountPrice)
+                .discountRate(discountRate)
+                .optionName(optionGroups.stream().map(OptionGroup::getName).toList())
+                .sellCount(sellCount)
                 .url("http://192.168.0.16:3000/products?id="+id)
-                .brand("http://192.168.0.16:3000/")
+                .baseUrl("http://192.168.0.16:3000")
+                .sellerName(seller.getName())
+                .categoryName(category.getName())
                 .build();
     }
 }

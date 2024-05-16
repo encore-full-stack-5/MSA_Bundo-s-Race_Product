@@ -32,6 +32,7 @@ public interface ProductsService {
     // update
     void updateProduct(Long productId, UpdateProductRequest updateProductRequest);
     void sellProducts(SellProductsRequest sellProductsRequest);
+    void updateReviewCount(Long productId);
 
     Page<ProductListResponse> getProductListByCategoryAndSort(
             Long category, Integer startPrice,Integer endPrice,Long sellerId,Pageable pageable);

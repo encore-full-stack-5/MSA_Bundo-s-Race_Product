@@ -107,6 +107,14 @@ public class ProductsServiceImpl implements ProductsService {
         });
     }
 
+    @Override
+    @Transactional
+    public void updateReviewCount(Long productId) {
+        Product product = productsRepository.findById(productId)
+                .orElseThrow(() -> new ExpectedError.ResourceNotFoundException("해당 상품이 존재하지 않습니다."));
+        product.setReviewCount(product.getReviewCount() + 1);
+    }
+
     private void addOptionGroupsInProduct(CreateProductRequest request, Product product) {
         request.optionGroups().forEach((optionGroupRequest) -> {
             OptionGroup optionGroup = optionGroupRequest.toEntity();
@@ -121,7 +129,6 @@ public class ProductsServiceImpl implements ProductsService {
             option.setOptionGroup(optionGroup);
             optionGroup.addOption(option);
         });
-
     }
 
     @Override
@@ -142,7 +149,7 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     private void updateCart(Product product) {
-        String url = "http://211.198.134.9:9000/api/v1/carts";
+        String url = "http://192.168.0.16:9000/api/v1/carts";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         UpdateCartItemRequest updateCartItemRequest = new UpdateCartItemRequest(

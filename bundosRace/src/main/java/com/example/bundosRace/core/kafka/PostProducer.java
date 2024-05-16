@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PostProducer {
-    private final KafkaTemplate<String, KafkaResponse<String>> kafkaTemplate;
+    private final KafkaTemplate<String, KafkaResponse<?>> kafkaTemplate;
     private final KafkaTemplate<String, KafkaDto> kafkaDToTemplate;
 
     @Bean
@@ -21,4 +21,7 @@ public class PostProducer {
         kafkaDToTemplate.send("test-topic", new KafkaDto(1L,"test","test"));
     }
 
+    public <T> void sendResponse(T data, String status, String topic) {
+        kafkaTemplate.send(topic, new KafkaResponse<>(data, status))  ;
+    }
 }
