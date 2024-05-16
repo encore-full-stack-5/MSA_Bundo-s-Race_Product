@@ -16,8 +16,6 @@ public record BlogRequest (
     public BlogDocument toDocument() {
         return BlogDocument.builder()
                 .id(domainId)
-                .domainId(domainId)
-                .type(type)
                 .name(name)
                 .description(description)
                 .url(url)

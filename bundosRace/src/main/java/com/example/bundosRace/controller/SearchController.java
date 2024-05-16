@@ -18,12 +18,6 @@ public class SearchController {
 
     private final SearchService searchService;
 
-    @PostMapping
-    public ResponseEntity<?> test() {
-        searchService.test();
-        return ResponseEntity.ok("success");
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") long id) {
         return ResponseEntity.ok(searchService.findById(id));
@@ -34,11 +28,6 @@ public class SearchController {
             @RequestParam("keyword") String keyword
     ) {
         return ResponseEntity.ok(searchService.totalSearch(keyword));
-    }
-
-    @GetMapping("/test")
-    public void testSend() {
-        searchService.sendKafkaMessage();
     }
 
     @GetMapping

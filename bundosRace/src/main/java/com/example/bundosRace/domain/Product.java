@@ -166,6 +166,7 @@ public class Product {
                 .description(description)
                 .price(price)
                 .url("http://192.168.0.16:3000/products?id="+id)
+                .brand("http://192.168.0.16:3000/")
                 .build();
     }
 }
