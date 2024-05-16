@@ -39,6 +39,11 @@ public class Consumer {
         productsService.updateReviewCount(data.productId());
     }
 
+    @KafkaListener(topics = "review-topic")
+    public void subscribeReview(ReviewDto data) {
+        System.out.println(data.productId());
+    }
+
     @KafkaListener(topics = "cafe-topic")
     public void subscribeCage(KafkaResponse<List<Cafe>> blogs) {
     }

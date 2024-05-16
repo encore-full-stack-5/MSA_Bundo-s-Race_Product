@@ -81,6 +81,8 @@ public class ProductListQueryRepository implements ProductListCustom{
                         return new OrderSpecifier<>(direction, product.discountPrice);
                     case "createdAt":
                         return new OrderSpecifier<>(direction, product.createdAt);
+                    case"reviewCount" :
+                        return new OrderSpecifier<>(direction, product.reviewCount);
                 }
             }
         }

@@ -399,6 +399,7 @@ class ProductsServiceImplTest {
                     555,
                     555,
                     555,
+                    555,
                     555
             );
 
@@ -420,6 +421,7 @@ class ProductsServiceImplTest {
             UpdateProductRequest request = new UpdateProductRequest(
                     "change",
                     "change",
+                    555,
                     555,
                     555,
                     555,
@@ -445,6 +447,7 @@ class ProductsServiceImplTest {
                     null,
                     null,
                     555,
+                    null,
                     null,
                     null,
                     null
