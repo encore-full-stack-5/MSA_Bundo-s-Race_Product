@@ -52,6 +52,8 @@ class ProductsServiceImplTest {
 
     @InjectMocks
     private ProductsServiceImpl productsService;
+    @InjectMocks
+    private SellerServiceImpl sellerService;
 
     private final Category dummyCategory = new Category(1L, "test");
     private final Seller dummySeller = new Seller(1L, "test", "test", LocalDateTime.now());
@@ -243,7 +245,7 @@ class ProductsServiceImplTest {
         CreateSellerRequest request = new CreateSellerRequest("test", "test");
 
         // when
-        productsService.createSeller(request);
+        sellerService.createSeller(request);
 
         // then
         ArgumentCaptor<Seller> sellerCaptor = ArgumentCaptor.forClass(Seller.class);
